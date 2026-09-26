@@ -1,0 +1,62 @@
+{
+  "listen": { "host": "127.0.0.1", "port": 8787 },
+  "concurrency": 2,
+  "state_dir": "./state",
+  "artifacts_dir": "./artifacts",
+  "parent": {
+    "callback_url": "https://dashboard.example.net/wp-json/ms-update-guard/v1/runner-result"
+  },
+  "http": {
+    "initial_delay_seconds": 0,
+    "attempts": 3,
+    "retry_delay_seconds": 20,
+    "timeout_seconds": 20
+  },
+  "browser": {
+    "navigation_timeout_seconds": 30
+  },
+  "sites": {
+    "43": {
+      "base_url": "https://www.kunde-beispiel.de",
+      "allowed_hosts": ["kunde-beispiel.de"],
+      "profiles": ["corporate-basic"],
+      "http": {
+        "cache_bust": true,
+        "pages": [
+          { "name": "home", "path": "/", "marker": "Kunde Beispiel GmbH" },
+          { "name": "kontakt", "path": "/kontakt/" }
+        ]
+      },
+      "critical_js": ["^Uncaught TypeError", "is not defined$"],
+      "corporate": {
+        "pages": [
+          { "name": "home", "path": "/", "expect_selector": "header nav" },
+          { "name": "leistungen", "path": "/leistungen/", "expect_text": "Leistungen" },
+          { "name": "kontakt", "path": "/kontakt/", "expect_selector": "form" }
+        ],
+        "cta_selector": "a.button-cta",
+        "form": {
+          "path": "/kontakt/",
+          "form_selector": "form.wpcf7-form",
+          "submit": false,
+          "safe_target_confirmed": false
+        }
+      }
+    },
+    "51": {
+      "base_url": "https://shop-beispiel.de",
+      "profiles": ["woocommerce", "http-only"],
+      "http": { "pages": [{ "name": "home", "path": "/", "marker": "woocommerce" }] },
+      "corporate": { "pages": [{ "name": "home", "path": "/", "expect_selector": "header" }] },
+      "woocommerce": {
+        "product_path": "/produkt/msug-testprodukt/",
+        "cart_path": "/warenkorb/",
+        "checkout_path": "/kasse/",
+        "payment_selector": "#payment",
+        "empty_cart_selector": ".product-remove a",
+        "sandbox_order": { "enabled": false, "gateway_confirmed_sandbox": false }
+      },
+      "login": null
+    }
+  }
+}

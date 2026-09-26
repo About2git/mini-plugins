@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<ruleset name="MS Update Guard">
+	<description>WordPress Coding Standards for MS Update Guard.</description>
+	<file>.</file>
+	<exclude-pattern>runner/*</exclude-pattern>
+	<exclude-pattern>tests/*</exclude-pattern>
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<arg name="extensions" value="php"/>
+	<arg value="sp"/>
+
+	<config name="minimum_wp_version" value="6.9"/>
+	<config name="testVersion" value="7.4-"/>
+
+	<rule ref="WordPress">
+		<!-- PSR-4-like class files inside a namespace; WordPress file naming is kept (class-*.php). -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<!-- Own tables are accessed directly on purpose (append-only journal, compare-and-set). -->
+		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>
+		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching"/>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="ms-update-guard"/>
+			</property>
+		</properties>
+	</rule>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

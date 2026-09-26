@@ -1,0 +1,19 @@
+{
+  "name": "ms-update-guard-runner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "External HTTP and Playwright smoke test runner for MS Update Guard.",
+  "license": "GPL-2.0-or-later",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test --test-timeout=120000 test/*.test.js"
+  },
+  "dependencies": {
+    "playwright-core": "1.56.1"
+  }
+}
