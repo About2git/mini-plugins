@@ -1,0 +1,2739 @@
+<!--
+============================================================
+  KARELLO 40 LANDINGPAGE
+  Esselmann Fahrzeugtechnik GmbH & Co. KG
+============================================================
+  EINBINDUNG IN WORDPRESS (Enfold Theme):
+  1. Neue Seite anlegen: z.B. "Karello 40"
+  2. Seitentemplate "Keine Sidebar" oder "Blanke Seite" wählen
+  3. Im Advanced Layout Editor einen "Code Block" einfügen
+     (oder klassischer Editor: HTML-Modus)
+  4. Kompletten Inhalt dieser Datei hineinkopieren
+  5. Seite veröffentlichen
+
+  HINWEIS: Alle Styles sind im Container ".karello-lp" gescoped.
+  Dadurch wird das Enfold-Theme-CSS nicht überschrieben und die
+  Landingpage bleibt optisch eigenständig.
+
+  LOGO:
+  Im Header ist ein PNG-Platzhalter (logo.png) vorgesehen.
+  Ersetze den src-Pfad durch deine WordPress-Medienbibliothek-URL,
+  z.B. /wp-content/uploads/2026/04/esselmann-logo.png
+  Empfohlene Größe: ca. 400 x 100 Pixel (Retina-ready),
+  PNG mit transparentem Hintergrund.
+
+  SLIDER-FOTOS:
+  Empfohlene Größe: 1920 x 1080 Pixel (Full HD, 16:9)
+  Format: JPG (Qualität 80-85%) oder WebP
+  Dateigröße: 200 bis 400 KB pro Bild
+  Im Code mit "SLIDE-IMAGE" markiert.
+
+  SCHRIFT:
+  Die Landingpage nutzt "IBM Plex Sans" (ausschließlich per CSS,
+  keine Google-Fonts-Verlinkung). Die Schrift muss im Theme
+  lokal eingebunden sein, sonst greift der Sans-Serif-Fallback.
+
+  RESPONSIVE:
+  Optimiert für Desktop, Tablet und Mobile.
+  Breakpoints: 1200px / 1024px / 820px / 600px / 400px
+============================================================
+-->
+
+<div class="karello-lp">
+<style>
+/* ============ SCOPED STYLES - KARELLO LANDINGPAGE ============ */
+
+.karello-lp {
+  /* Brand Tokens */
+  --kl-blue:    #002554;
+  --kl-blue-d:  #001a3d;
+  --kl-orange:  #EF7D00;
+  --kl-orange-d:#d66f00;
+  --kl-grey:    #C6C6C6;
+  --kl-ink:     #0A1628;
+  --kl-cream:   #F5F2ED;
+  --kl-paper:   #FAF8F4;
+  --kl-white:   #FFFFFF;
+  --kl-line:    rgba(0,37,84,0.12);
+
+  /* Scene Gradients (für Slider-Hintergrund) */
+  --sc-1: linear-gradient(135deg, #1a3a2e 0%, #2d5a3d 50%, #4a7c3a 100%);
+  --sc-2: linear-gradient(135deg, #6b1a1f 0%, #a42a2a 50%, #d4452a 100%);
+  --sc-3: linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 50%, #4a90c2 100%);
+  --sc-4: linear-gradient(135deg, #3d2817 0%, #6b4423 50%, #a0703a 100%);
+  --sc-5: linear-gradient(135deg, #2d1b4e 0%, #6b2d8e 50%, #c4428e 100%);
+  --sc-6: linear-gradient(135deg, #1a2332 0%, #2d3a5a 50%, #4a5a82 100%);
+
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--kl-ink);
+  background: var(--kl-paper);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Reset für Scope */
+.karello-lp *,
+.karello-lp *::before,
+.karello-lp *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.karello-lp h1, .karello-lp h2, .karello-lp h3, .karello-lp h4 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--kl-ink);
+  text-transform: uppercase;
+}
+
+.karello-lp p { font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; }
+.karello-lp button { font-family: inherit; cursor: pointer; border: none; }
+.karello-lp a { color: inherit; text-decoration: none; }
+.karello-lp img { max-width: 100%; display: block; }
+.karello-lp ul { list-style: none; }
+
+.karello-lp .kl-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ==================== HERO / SLIDER ==================== */
+.karello-lp .kl-hero {
+  position: relative;
+  height: 72vh;
+  min-height: 520px;
+  max-height: 960px;
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.karello-lp .kl-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.karello-lp .kl-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.karello-lp .kl-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* SLIDE-IMAGE: Hier echte Fotos einbauen via background-image */
+.karello-lp .kl-slide[data-scene="1"] { background: var(--sc-1); }
+.karello-lp .kl-slide[data-scene="2"] { background: var(--sc-2); }
+.karello-lp .kl-slide[data-scene="3"] { background: var(--sc-3); }
+.karello-lp .kl-slide[data-scene="4"] { background: var(--sc-4); }
+.karello-lp .kl-slide[data-scene="5"] { background: var(--sc-5); }
+.karello-lp .kl-slide[data-scene="6"] { background: var(--sc-6); }
+
+/* Overlay-Grain für Textur */
+.karello-lp .kl-slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at top right, rgba(255,255,255,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(0,0,0,0.25) 0%, transparent 60%);
+}
+
+.karello-lp .kl-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+/* Hero Content Layer */
+.karello-lp .kl-hero-content {
+  position: relative;
+  z-index: 3;
+  padding: 40px 48px 36px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.karello-lp .kl-hero-static {
+  max-width: 680px;
+  background: transparent;
+  display: block;
+  padding: 0;
+  border-radius: 0;
+}
+.karello-lp .kl-hero-static .kl-eyebrow {
+  display: inline-flex;
+  margin-bottom: 14px;
+  color: rgba(255,255,255,0.85);
+  background: var(--kl-blue);
+  padding: 5px 14px 5px 10px;
+  border-radius: 4px;
+  opacity: 1;
+}
+.karello-lp .kl-hero-static .kl-eyebrow::before { background: rgba(255,255,255,0.45); }
+.karello-lp .kl-hero-static .kl-hero-headline {
+  display: block;
+  background: transparent;
+  color: #ffffff;
+  padding: 0;
+  line-height: 1.15;
+}
+.karello-lp .kl-hero-static .kl-hero-headline .kl-hl {
+  display: inline;
+  background: var(--kl-blue);
+  color: #ffffff;
+  padding: 4px 12px 6px;
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.karello-lp .kl-hero-static .kl-hero-headline em {
+  display: inline;
+  background: var(--kl-blue);
+  color: var(--kl-orange);
+  font-style: normal;
+  padding: 4px 12px 6px;
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Slide Labels (rotating text) */
+.karello-lp .kl-slide-labels {
+  position: relative;
+  color: var(--kl-white);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+.karello-lp .kl-slide-label {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  transform: translateY(10px);
+}
+.karello-lp .kl-slide-label.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.karello-lp .kl-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 14px;
+}
+.karello-lp .kl-eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--kl-orange);
+}
+
+.karello-lp .kl-hero-headline {
+  font-size: clamp(40px, 5.8vw, 84px);
+  line-height: 0.95;
+  color: var(--kl-white);
+  font-weight: 800;
+  max-width: 720px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.karello-lp .kl-hero-headline em {
+  font-style: normal;
+  color: var(--kl-orange);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+}
+
+.karello-lp .kl-hero-sub {
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  max-width: 460px;
+  margin-top: 20px;
+}
+
+/* Product Chip (rotating: Obst, Cocktails etc.) */
+.karello-lp .kl-product-chip {
+  position: absolute;
+  top: 50%;
+  right: 8%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.karello-lp .kl-chip-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: var(--kl-orange);
+  color: var(--kl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  text-align: center;
+  line-height: 1.1;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative;
+  animation: chipRotate 40s linear infinite;
+}
+
+.karello-lp .kl-chip-inner {
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed rgba(255,255,255,0.4);
+  border-radius: 50%;
+}
+
+.karello-lp .kl-chip-text {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  padding: 0 20px;
+  text-align: center;
+  animation: chipRotate 40s linear infinite reverse;
+}
+.karello-lp .kl-chip-text.active { opacity: 1; }
+
+@keyframes chipRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.karello-lp .kl-chip-price {
+  background: var(--kl-white);
+  color: var(--kl-ink);
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.karello-lp .kl-chip-price strong {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--kl-blue);
+}
+
+/* Karello Illustration (feste Silhouette) */
+.karello-lp .kl-karello-stage {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(900px, 85%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.karello-lp .kl-karello-svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.45));
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Slider Controls */
+.karello-lp .kl-slider-ctrl {
+  position: absolute;
+  bottom: 32px;
+  left: 48px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.karello-lp .kl-slider-nav {
+  display: flex;
+  gap: 8px;
+}
+.karello-lp .kl-slider-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--kl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .25s;
+}
+.karello-lp .kl-slider-btn:hover {
+  background: var(--kl-orange);
+  border-color: var(--kl-orange);
+}
+
+.karello-lp .kl-slider-dots {
+  display: flex;
+  gap: 8px;
+}
+.karello-lp .kl-dot {
+  width: 28px;
+  height: 4px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background .25s;
+}
+.karello-lp .kl-dot.active { background: var(--kl-orange); }
+
+.karello-lp .kl-slider-counter {
+  position: absolute;
+  bottom: 32px;
+  right: 48px;
+  z-index: 5;
+  color: var(--kl-white);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+.karello-lp .kl-slider-counter strong {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* Side labels (vertikal, BMW-Style) */
+.karello-lp .kl-side-label {
+  position: absolute;
+  z-index: 5;
+  color: rgba(255,255,255,0.6);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.karello-lp .kl-side-label.left { left: 12px; bottom: 48px; }
+.karello-lp .kl-side-label.right { right: 12px; bottom: 48px; transform: rotate(0deg); writing-mode: vertical-rl; }
+
+/* ==================== VIELSEITIGKEIT GRID ==================== */
+.karello-lp .kl-versatility {
+  padding: 140px 0 100px;
+  text-align: center;
+  position: relative;
+}
+
+.karello-lp .kl-section-head {
+  max-width: 780px;
+  margin: 0 auto 80px;
+}
+
+.karello-lp .kl-section-eyebrow {
+  display: inline-block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--kl-orange);
+  margin-bottom: 20px;
+  padding: 6px 14px;
+  border: 1px solid var(--kl-orange);
+  border-radius: 999px;
+}
+
+.karello-lp .kl-section-title {
+  font-size: clamp(36px, 5vw, 68px);
+  margin-bottom: 20px;
+}
+
+.karello-lp .kl-section-lead {
+  font-size: 18px;
+  color: rgba(10,22,40,0.7);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.karello-lp .kl-use-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--kl-line);
+  border: 1px solid var(--kl-line);
+  border-radius: 14px;
+  overflow: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.karello-lp .kl-use-card {
+  background: var(--kl-paper);
+  padding: 40px 28px;
+  text-align: left;
+  position: relative;
+  transition: background .3s;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.karello-lp .kl-use-card:hover { background: var(--kl-cream); }
+
+.karello-lp .kl-use-card h4 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.karello-lp .kl-use-card p {
+  font-size: 14px;
+  color: rgba(10,22,40,0.65);
+  line-height: 1.5;
+}
+.karello-lp .kl-use-num {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(10,22,40,0.35);
+  letter-spacing: 0.1em;
+}
+
+/* Accent-Karte in Orange */
+.karello-lp .kl-use-card.accent {
+  background: var(--kl-orange);
+  color: var(--kl-white);
+}
+.karello-lp .kl-use-card.accent:hover { background: var(--kl-orange-d); }
+.karello-lp .kl-use-card.accent h4 { color: var(--kl-white); }
+.karello-lp .kl-use-card.accent p { color: rgba(255,255,255,0.9); }
+.karello-lp .kl-use-card.accent .kl-use-num { color: rgba(255,255,255,0.6); }
+
+/* ==================== VARIANTEN ==================== */
+.karello-lp .kl-variants {
+  padding: 60px 0 120px;
+  background: var(--kl-paper);
+}
+
+.karello-lp .kl-variant-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.karello-lp .kl-variant-card {
+  background: var(--kl-white);
+  border: 1px solid var(--kl-line);
+  border-radius: 14px;
+  padding: 34px 30px;
+  display: flex;
+  flex-direction: column;
+  min-height: 470px;
+  position: relative;
+  overflow: hidden;
+}
+
+.karello-lp .kl-variant-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  background: var(--kl-orange);
+}
+
+.karello-lp .kl-variant-tag {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--kl-orange);
+  margin-bottom: 20px;
+}
+
+.karello-lp .kl-variant-card h3 {
+  font-size: clamp(18px, 1.6vw, 24px);
+  margin-bottom: 14px;
+}
+
+.karello-lp .kl-variant-card p {
+  color: rgba(10,22,40,0.68);
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+.karello-lp .kl-variant-price {
+  margin: 4px 0 22px;
+  padding: 16px 0;
+  border-top: 1px solid var(--kl-line);
+  border-bottom: 1px solid var(--kl-line);
+}
+
+.karello-lp .kl-variant-price span {
+  display: block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(10,22,40,0.48);
+  margin-bottom: 4px;
+}
+
+.karello-lp .kl-variant-price strong {
+  font-size: 32px;
+  line-height: 1;
+  color: var(--kl-blue);
+}
+
+.karello-lp .kl-variant-list {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.karello-lp .kl-variant-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(10,22,40,0.72);
+}
+
+.karello-lp .kl-variant-list li::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--kl-orange);
+  flex: 0 0 7px;
+  margin-top: 8px;
+}
+
+.karello-lp .kl-variant-actions {
+  margin-top: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.karello-lp .kl-variant-card .kl-btn {
+  justify-content: center;
+}
+
+.karello-lp .kl-variant-card .kl-btn-ghost {
+  color: var(--kl-blue);
+  border-color: var(--kl-line);
+  background: var(--kl-white);
+}
+
+.karello-lp .kl-variant-card .kl-btn-ghost:hover {
+  background: var(--kl-cream);
+  border-color: rgba(0,37,84,0.24);
+}
+
+.karello-lp .kl-variant-source {
+  font-size: 12px;
+  color: rgba(10,22,40,0.48);
+  margin-top: 14px;
+}
+
+.karello-lp .kl-price-banner {
+  display: block;
+}
+
+/* ==================== USPs (01-04 Style) ==================== */
+.karello-lp .kl-usps {
+  padding: 100px 0;
+  background: var(--kl-ink);
+  color: var(--kl-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.karello-lp .kl-usps::before {
+  content: 'KARELLO';
+  position: absolute;
+  top: 40px;
+  left: -20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 280px;
+  color: rgba(255,255,255,0.03);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.karello-lp .kl-usps .kl-section-head { position: relative; z-index: 2; }
+.karello-lp .kl-usps .kl-section-title { color: var(--kl-white); }
+.karello-lp .kl-usps .kl-section-lead { color: rgba(255,255,255,0.7); }
+.karello-lp .kl-usps .kl-section-eyebrow {
+  color: var(--kl-orange);
+  border-color: var(--kl-orange);
+}
+
+.karello-lp .kl-usp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.karello-lp .kl-usp-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 36px 28px;
+  position: relative;
+  transition: transform .35s, background .35s;
+}
+.karello-lp .kl-usp-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.08);
+}
+.karello-lp .kl-usp-card.highlight {
+  background: var(--kl-orange);
+  border-color: var(--kl-orange);
+}
+
+.karello-lp .kl-usp-num {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 56px;
+  color: var(--kl-orange);
+  line-height: 1;
+  margin-bottom: 24px;
+}
+.karello-lp .kl-usp-card.highlight .kl-usp-num { color: var(--kl-white); }
+
+.karello-lp .kl-usp-card h3 {
+  color: #ffffff !important;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.karello-lp .kl-usp-card p {
+  color: rgba(255,255,255,0.75);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.karello-lp .kl-usp-card.highlight p { color: rgba(255,255,255,0.95); }
+
+/* ==================== TECHNISCHE DATEN ==================== */
+.karello-lp .kl-specs {
+  padding: 120px 0;
+  background: var(--kl-paper);
+  position: relative;
+}
+
+.karello-lp .kl-specs-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.karello-lp .kl-specs-visual {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  box-shadow: none;
+  margin-bottom: 48px;
+}
+
+.karello-lp .kl-specs-photo {
+  width: 100%;
+  max-width: 1060px;
+  height: auto;
+  max-height: 580px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  margin: 0 auto;
+}
+
+.karello-lp .kl-specs-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kl-cream);
+}
+
+.karello-lp .kl-dimensions {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.karello-lp .kl-dim-label {
+  position: absolute;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: var(--kl-blue);
+  letter-spacing: 0.05em;
+  background: var(--kl-white);
+  padding: 4px 10px;
+  border: 1px solid var(--kl-line);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.karello-lp .kl-specs-list {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.karello-lp .kl-specs-list h2 {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.karello-lp .kl-spec-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--kl-line);
+}
+.karello-lp .kl-spec-row:last-child { border-bottom: none; }
+
+.karello-lp .kl-spec-key {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--kl-blue);
+  opacity: 0.7;
+}
+.karello-lp .kl-spec-val {
+  font-size: 16px;
+  color: var(--kl-ink);
+  font-weight: 500;
+}
+.karello-lp .kl-spec-val small {
+  display: block;
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(10,22,40,0.6);
+  margin-top: 4px;
+}
+
+/* ==================== AUSSTATTUNG ==================== */
+.karello-lp .kl-equipment {
+  padding: 120px 0;
+  background: var(--kl-paper);
+}
+
+.karello-lp .kl-equip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 60px;
+}
+
+.karello-lp .kl-equip-col {
+  background: var(--kl-white);
+  border-radius: 14px;
+  padding: 48px;
+  border: 1px solid var(--kl-line);
+}
+
+.karello-lp .kl-equip-col h3 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.karello-lp .kl-equip-col .kl-equip-tag {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--kl-orange);
+  margin-bottom: 28px;
+  display: block;
+}
+
+.karello-lp .kl-equip-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--kl-line);
+  font-size: 15px;
+}
+.karello-lp .kl-equip-list li:last-child { border-bottom: none; }
+
+.karello-lp .kl-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--kl-blue);
+  color: var(--kl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Options Accordion */
+.karello-lp .kl-options {
+  margin-top: 60px;
+  background: var(--kl-ink);
+  color: var(--kl-white);
+  border-radius: 14px;
+  padding: 56px 48px;
+}
+
+.karello-lp .kl-options h3 {
+  color: var(--kl-orange);
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.karello-lp .kl-options-lead {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+  max-width: 560px;
+}
+
+.karello-lp .kl-options-table {
+  display: grid;
+  gap: 1px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.karello-lp .kl-option-row {
+  display: block;
+  padding: 18px 24px;
+  background: var(--kl-ink);
+  transition: background .2s;
+}
+.karello-lp .kl-option-row:hover { background: #0f1e36; }
+
+.karello-lp .kl-option-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--kl-white);
+}
+.karello-lp .kl-option-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 2px;
+}
+.karello-lp .kl-option-price {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  color: var(--kl-orange);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ==================== CTA STRIPS ==================== */
+.karello-lp .kl-cta-strip {
+  background: var(--kl-cream);
+  border-top: 1px solid var(--kl-line);
+  border-bottom: 1px solid var(--kl-line);
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.karello-lp .kl-cta-strip p {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--kl-blue);
+  margin: 0;
+}
+.karello-lp .kl-cta-strip--accent {
+  background: var(--kl-blue);
+  border-color: transparent;
+  padding: 44px 56px;
+}
+.karello-lp .kl-cta-strip--accent p {
+  color: var(--kl-white);
+  font-size: clamp(22px, 2.5vw, 34px);
+  line-height: 1.18;
+  font-weight: 800;
+  text-transform: uppercase;
+  max-width: 760px;
+}
+.karello-lp .kl-cta-strip--dark {
+  background: var(--kl-blue);
+  border-color: transparent;
+}
+.karello-lp .kl-cta-strip--dark p {
+  color: rgba(255,255,255,0.9);
+}
+
+/* ==================== FINANZIERUNG ==================== */
+.karello-lp .kl-financing {
+  padding: 100px 0;
+  background: #002554;
+  position: relative;
+  overflow: hidden;
+}
+.karello-lp .kl-financing::before {
+  content: '';
+  position: absolute;
+  right: -120px;
+  top: -120px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(239,125,0,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+.karello-lp .kl-financing::after {
+  content: '';
+  position: absolute;
+  left: -80px;
+  bottom: -80px;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+  pointer-events: none;
+}
+.karello-lp .kl-financing .kl-section-head { position: relative; z-index: 2; }
+.karello-lp .kl-financing .kl-section-title { color: var(--kl-white); }
+.karello-lp .kl-financing .kl-section-lead { color: rgba(255,255,255,0.75); }
+.karello-lp .kl-financing .kl-section-eyebrow { color: var(--kl-orange); border-color: var(--kl-orange); }
+
+.karello-lp .kl-fin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.karello-lp .kl-fin-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 16px;
+  padding: 44px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background .3s;
+}
+.karello-lp .kl-fin-card:hover { background: rgba(255,255,255,0.1); }
+
+.karello-lp .kl-fin-card--highlight {
+  background: var(--kl-orange);
+  border-color: var(--kl-orange);
+}
+.karello-lp .kl-fin-card--highlight:hover { background: var(--kl-orange-d); }
+
+.karello-lp .kl-fin-tag {
+  display: inline-block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--kl-orange);
+  margin-bottom: 24px;
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-tag { color: rgba(255,255,255,0.85); }
+
+.karello-lp .kl-fin-vehicle {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--kl-white);
+  margin-bottom: 6px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.karello-lp .kl-fin-rate-wrap {
+  margin: 28px 0 24px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-rate-wrap {
+  border-color: rgba(255,255,255,0.3);
+}
+
+.karello-lp .kl-fin-rate-label {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 8px;
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-rate-label { color: rgba(255,255,255,0.8); }
+
+.karello-lp .kl-fin-rate {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 54px;
+  color: var(--kl-orange);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-rate { color: var(--kl-white); }
+
+.karello-lp .kl-fin-rate sup {
+  font-size: 26px;
+  vertical-align: top;
+  margin-top: 6px;
+  display: inline-block;
+}
+.karello-lp .kl-fin-rate span {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: rgba(255,255,255,0.6);
+  margin-left: 4px;
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-rate span { color: rgba(255,255,255,0.85); }
+
+.karello-lp .kl-fin-details {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.karello-lp .kl-fin-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+  gap: 12px;
+}
+.karello-lp .kl-fin-detail-row dt {
+  color: rgba(255,255,255,0.6);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+.karello-lp .kl-fin-detail-row dd {
+  color: var(--kl-white);
+  font-weight: 600;
+  text-align: right;
+}
+
+.karello-lp .kl-fin-note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-note { color: rgba(255,255,255,0.6); }
+
+.karello-lp .kl-fin-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+}
+.karello-lp .kl-fin-card--highlight .kl-fin-badge {
+  background: rgba(255,255,255,0.2);
+  color: var(--kl-white);
+}
+
+.karello-lp .kl-fin-cta { margin-top: 8px; }
+
+@media (max-width: 1024px) {
+  .karello-lp .kl-fin-grid { grid-template-columns: 1fr; gap: 18px; }
+  .karello-lp .kl-financing { padding: 80px 0; }
+}
+@media (max-width: 600px) {
+  .karello-lp .kl-fin-card { padding: 32px 24px; }
+  .karello-lp .kl-fin-rate { font-size: 42px; }
+  .karello-lp .kl-financing { padding: 64px 0; }
+}
+
+/* ==================== PREIS BANNER ==================== */
+.karello-lp .kl-price-banner {
+  padding: 80px 0;
+  background: var(--kl-paper);
+}
+
+.karello-lp .kl-price-inner {
+  background: var(--kl-blue);
+  color: var(--kl-white);
+  border-radius: 18px;
+  padding: 64px 56px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 48px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.karello-lp .kl-price-inner::before {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(239,125,0,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.karello-lp .kl-price-label {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--kl-orange);
+  margin-bottom: 16px;
+}
+
+.karello-lp .kl-price-headline {
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--kl-white);
+  margin-bottom: 20px;
+}
+
+.karello-lp .kl-price-text {
+  color: rgba(255,255,255,0.8);
+  max-width: 480px;
+}
+
+.karello-lp .kl-price-box {
+  position: relative;
+  text-align: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 36px 28px;
+  backdrop-filter: blur(10px);
+}
+.karello-lp .kl-price-from {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 8px;
+}
+.karello-lp .kl-price-value {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 56px;
+  color: var(--kl-orange);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.karello-lp .kl-price-currency { font-size: 32px; vertical-align: top; }
+.karello-lp .kl-price-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 8px;
+}
+
+/* ==================== CTA / SIMON SERRA ==================== */
+.karello-lp .kl-cta {
+  padding: 120px 0;
+  background: var(--kl-paper);
+  position: relative;
+}
+
+.karello-lp .kl-cta-inner {
+  background: var(--kl-ink);
+  border-radius: 12px;
+  padding: 80px 64px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 64px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.karello-lp .kl-cta-inner::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(239,125,0,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.karello-lp .kl-cta-text { position: relative; z-index: 2; }
+.karello-lp .kl-cta-eyebrow {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--kl-orange);
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.karello-lp .kl-cta-headline {
+  font-size: clamp(36px, 4.5vw, 64px);
+  color: var(--kl-white);
+  margin-bottom: 24px;
+  line-height: 1;
+}
+.karello-lp .kl-cta-headline em {
+  font-style: normal;
+  color: var(--kl-orange);
+}
+
+.karello-lp .kl-cta-sub {
+  color: rgba(255,255,255,0.75);
+  font-size: 17px;
+  max-width: 480px;
+  margin-bottom: 36px;
+}
+
+.karello-lp .kl-cta-buttons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.karello-lp .kl-rm-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  color: #ffffff;
+}
+
+.karello-lp .kl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  transition: all .25s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.karello-lp .kl-btn-primary {
+  background: var(--kl-orange);
+  color: var(--kl-white);
+}
+.karello-lp .kl-btn-primary:hover {
+  background: var(--kl-orange-d);
+  transform: translateX(2px);
+}
+
+.karello-lp .kl-btn-ghost {
+  background: transparent;
+  color: var(--kl-white);
+  border-color: rgba(255,255,255,0.25);
+}
+.karello-lp .kl-btn-ghost:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.5);
+}
+
+.karello-lp .kl-btn-ghost-light {
+  background: transparent;
+  color: rgba(255,255,255,0.85);
+  border-color: rgba(255,255,255,0.2);
+  font-weight: 500;
+}
+.karello-lp .kl-btn-ghost-light:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--kl-white);
+}
+
+.karello-lp .kl-hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 12px;
+  position: relative;
+  z-index: 4;
+}
+
+.karello-lp .kl-btn svg { transition: transform .25s; }
+.karello-lp .kl-btn:hover svg { transform: translateX(4px); }
+
+/* Simon Serra Card */
+.karello-lp .kl-contact-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 40px;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+
+.karello-lp .kl-contact-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.karello-lp .kl-contact-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(239,125,0,0.3);
+  display: block;
+}
+
+.karello-lp .kl-contact-meta h4 {
+  color: var(--kl-white);
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.karello-lp .kl-contact-role {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.02em;
+}
+
+.karello-lp .kl-contact-items { display: grid; gap: 14px; }
+.karello-lp .kl-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+  transition: color .2s;
+}
+.karello-lp .kl-contact-item:hover { color: var(--kl-orange); }
+
+.karello-lp .kl-contact-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ==================== FOOTER ==================== */
+.karello-lp .kl-footer {
+  padding: 60px 0 40px;
+  background: var(--kl-paper);
+  border-top: 1px solid var(--kl-line);
+  text-align: center;
+}
+.karello-lp .kl-footer-small {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(10,22,40,0.5);
+}
+.karello-lp .kl-footer-small span { color: var(--kl-orange); }
+
+/* ==================== RESPONSIVE ==================== */
+
+/* Large Tablets / Small Desktop (1024px) */
+@media (max-width: 1200px) {
+  .karello-lp .kl-hero-headline { font-size: clamp(38px, 5.4vw, 72px); }
+  .karello-lp .kl-product-chip { right: 4%; }
+  .karello-lp .kl-chip-circle { width: 150px; height: 150px; font-size: 18px; }
+  .karello-lp .kl-cta-inner { padding: 64px 48px; }
+  .karello-lp .kl-price-inner { padding: 52px 40px; }
+}
+
+/* Tablet (768-1024px) */
+@media (max-width: 1024px) {
+  .karello-lp .kl-wrap { padding: 0 28px; }
+  .karello-lp .kl-hero-content { padding: 20px 36px 40px; }
+  .karello-lp .kl-karello-stage { width: 90%; }
+  .karello-lp .kl-use-grid { grid-template-columns: repeat(2, 1fr); }
+  .karello-lp .kl-variant-grid { grid-template-columns: 1fr; }
+  .karello-lp .kl-usp-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .karello-lp .kl-specs-inner { grid-template-columns: 1fr; gap: 48px; }
+  .karello-lp .kl-equip-grid { grid-template-columns: 1fr; }
+  .karello-lp .kl-price-inner { grid-template-columns: 1fr; gap: 32px; padding: 48px 36px; }
+  .karello-lp .kl-cta-inner { grid-template-columns: 1fr; padding: 56px 40px; gap: 40px; }
+  .karello-lp .kl-versatility,
+  .karello-lp .kl-variants,
+  .karello-lp .kl-usps,
+  .karello-lp .kl-specs,
+  .karello-lp .kl-equipment,
+  .karello-lp .kl-cta { padding: 100px 0; }
+  .karello-lp .kl-section-head { margin-bottom: 60px; }
+  .karello-lp .kl-usps::before { font-size: 200px; }
+}
+
+/* Small Tablet / Large Phone (768px) */
+@media (max-width: 820px) {
+  .karello-lp .kl-wrap { padding: 0 20px; }
+  .karello-lp .kl-hero { border-radius: 12px; }
+  .karello-lp .kl-hero-content { padding: 16px 24px 80px; }
+  .karello-lp .kl-hero-headline { font-size: clamp(34px, 7vw, 52px); }
+  .karello-lp .kl-hero-sub { font-size: 16px; max-width: 100%; }
+  .karello-lp .kl-slide-labels { padding-top: 24px; }
+  .karello-lp .kl-product-chip {
+    position: absolute;
+    top: auto;
+    bottom: 120px;
+    right: 20px;
+    transform: none;
+    gap: 10px;
+  }
+  .karello-lp .kl-chip-circle { width: 110px; height: 110px; font-size: 13px; padding: 14px; }
+  .karello-lp .kl-chip-price { font-size: 10px; padding: 7px 12px; }
+  .karello-lp .kl-chip-price strong { font-size: 12px; }
+  .karello-lp .kl-karello-stage { width: 95%; bottom: 60px; }
+  .karello-lp .kl-slider-ctrl { left: 20px; bottom: 24px; }
+  .karello-lp .kl-slider-btn { width: 38px; height: 38px; }
+  .karello-lp .kl-slider-counter { right: 20px; bottom: 32px; font-size: 11px; }
+  .karello-lp .kl-slider-counter strong { font-size: 18px; }
+  .karello-lp .kl-side-label { display: none; }
+  .karello-lp .kl-use-card { padding: 32px 24px; min-height: 200px; }
+  .karello-lp .kl-section-title { font-size: clamp(30px, 6vw, 48px); }
+  .karello-lp .kl-versatility,
+  .karello-lp .kl-usps,
+  .karello-lp .kl-specs,
+  .karello-lp .kl-equipment,
+  .karello-lp .kl-cta { padding: 80px 0; }
+  .karello-lp .kl-usps::before { font-size: 120px; top: 24px; }
+  .karello-lp .kl-cta-buttons { flex-direction: column; align-items: stretch; }
+  .karello-lp .kl-btn { justify-content: center; }
+}
+
+/* Phone (600px) */
+@media (max-width: 600px) {
+  .karello-lp .kl-wrap { padding: 0 16px; }
+  .karello-lp .kl-hero { margin: 0 6px; border-radius: 16px; }
+  .karello-lp .kl-hero-content { padding: 12px 20px 70px; }
+  .karello-lp .kl-hero-headline { font-size: clamp(30px, 8vw, 42px); line-height: 1; }
+  .karello-lp .kl-eyebrow { font-size: 10px; margin-bottom: 10px; }
+  .karello-lp .kl-product-chip { bottom: 100px; right: 14px; }
+  .karello-lp .kl-chip-circle { width: 92px; height: 92px; font-size: 11px; padding: 10px; }
+  .karello-lp .kl-chip-inner { inset: 8px; }
+  .karello-lp .kl-use-grid { grid-template-columns: 1fr; }
+  .karello-lp .kl-variant-card { min-height: 0; padding: 30px 24px; }
+  .karello-lp .kl-usp-grid { grid-template-columns: 1fr; gap: 14px; }
+  .karello-lp .kl-usp-card { padding: 28px 24px; }
+  .karello-lp .kl-usp-num { font-size: 44px; margin-bottom: 16px; }
+  .karello-lp .kl-equip-col { padding: 32px 24px; }
+  .karello-lp .kl-equip-col h3 { font-size: 24px; }
+  .karello-lp .kl-options { padding: 36px 24px; border-radius: 12px; }
+  .karello-lp .kl-options h3 { font-size: 26px; }
+  .karello-lp .kl-option-row { padding: 16px 18px; grid-template-columns: 1fr; gap: 6px; }
+  .karello-lp .kl-option-price { font-size: 13px; align-self: start; }
+  .karello-lp .kl-price-inner { padding: 40px 24px; border-radius: 22px; }
+  .karello-lp .kl-price-box { padding: 28px 20px; }
+  .karello-lp .kl-price-value { font-size: 42px; }
+  .karello-lp .kl-price-currency { font-size: 24px; }
+  .karello-lp .kl-cta-inner { padding: 44px 24px; border-radius: 22px; gap: 32px; }
+  .karello-lp .kl-cta-headline { font-size: clamp(28px, 7vw, 40px); }
+  .karello-lp .kl-contact-card { padding: 28px 22px; }
+  .karello-lp .kl-contact-avatar { width: 60px; height: 60px; font-size: 22px; }
+  .karello-lp .kl-spec-row { grid-template-columns: 1fr; gap: 4px; padding: 18px 0; }
+  .karello-lp .kl-specs-visual { padding: 24px; }
+  .karello-lp .kl-versatility,
+  .karello-lp .kl-variants,
+  .karello-lp .kl-usps,
+  .karello-lp .kl-specs,
+  .karello-lp .kl-equipment,
+  .karello-lp .kl-cta { padding: 64px 0; }
+  .karello-lp .kl-section-head { margin-bottom: 44px; }
+  .karello-lp .kl-price-banner { padding: 56px 0; }
+  .karello-lp .kl-footer-small { font-size: 10px; padding: 0 16px; line-height: 1.8; }
+}
+
+/* ==================== STÖRER ==================== */
+.karello-lp .kl-stoerer {
+  position: absolute;
+  top: 48px;
+  right: 48px;
+  z-index: 6;
+  width: 148px;
+  height: 148px;
+  background: var(--kl-orange);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(239,125,0,0.45);
+  animation: stoererPulse 3.5s ease-in-out infinite;
+}
+.karello-lp .kl-stoerer::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.35);
+  animation: stoererSpin 20s linear infinite;
+}
+@keyframes stoererPulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 10px 40px rgba(239,125,0,0.45); }
+  50%       { transform: scale(1.05); box-shadow: 0 14px 50px rgba(239,125,0,0.65); }
+}
+@keyframes stoererSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.karello-lp .kl-stoerer-label {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.karello-lp .kl-stoerer-rate {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.karello-lp .kl-stoerer-unit {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.9);
+  margin-top: 4px;
+  line-height: 1.2;
+}
+.karello-lp .kl-stoerer-sub {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin-top: 5px;
+}
+@media (max-width: 820px) {
+  .karello-lp .kl-stoerer { width: 118px; height: 118px; top: 18px; right: 18px; }
+  .karello-lp .kl-stoerer-rate { font-size: 24px; }
+}
+@media (max-width: 600px) {
+  .karello-lp .kl-stoerer { width: 96px; height: 96px; top: 12px; right: 12px; padding: 10px; }
+  .karello-lp .kl-stoerer-rate { font-size: 20px; }
+  .karello-lp .kl-stoerer-label { font-size: 9px; }
+  .karello-lp .kl-stoerer-unit { font-size: 10px; }
+  .karello-lp .kl-stoerer-sub { display: none; }
+}
+
+/* Very small phones (380px) */
+@media (max-width: 400px) {
+  .karello-lp .kl-hero-headline { font-size: 28px; }
+  .karello-lp .kl-chip-circle { width: 80px; height: 80px; font-size: 10px; }
+  .karello-lp .kl-chip-price { font-size: 9px; padding: 6px 10px; }
+  .karello-lp .kl-chip-price strong { font-size: 10px; }
+  .karello-lp .kl-section-title { font-size: 28px; }
+  .karello-lp .kl-slider-btn { width: 34px; height: 34px; }
+  .karello-lp .kl-slider-btn svg { width: 14px; height: 14px; }
+  .karello-lp .kl-dot { width: 20px; }
+}
+</style>
+
+
+<!-- ============ HERO / SLIDER ============ -->
+<section class="kl-hero" id="hero">
+  <!-- Slides Layer (Hintergrund) -->
+  <div class="kl-slides">
+    <!-- SLIDE-IMAGE: Weitere Bilder hier hinzufügen:
+         <div class="kl-slide" style="background-image: url('/wp-content/uploads/pfad/slide.jpg');"></div>
+         EMPFOHLENE BILDGRöSSE: 1920 x 1080 Pixel (Full HD, 16:9), JPG 80-85 % -->
+    <div class="kl-slide active" style="background-image: url('https://esselmann.de/wp-content/uploads/Karello40-cafe-1.png');"></div>
+    <div class="kl-slide" style="background-image: url('https://esselmann.de/wp-content/uploads/Karello40-slush.png');"></div>
+    <div class="kl-slide" style="background-image: url('https://esselmann.de/wp-content/uploads/Karello40-obstgemuese.png');"></div>
+    <div class="kl-slide" style="background-image: url('https://esselmann.de/wp-content/uploads/Karello40-cocktails.png');"></div>
+  </div>
+
+  <!-- Side Labels BMW-Style -->
+  <div class="kl-side-label left">KARELLO 40 / MOBILE RETAIL</div>
+
+  <!-- Störer: Mietkauf-Hinweis -->
+  <div class="kl-stoerer">
+    <div class="kl-stoerer-label">Mietkauf</div>
+    <div class="kl-stoerer-rate">ab 510 €</div>
+    <div class="kl-stoerer-unit">/ Monat</div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="kl-hero-content">
+    <!-- Static Headline -->
+    <div class="kl-hero-static">
+      <span class="kl-eyebrow">Mobiler Verkaufsanhänger — Direkt vom Hersteller</span>
+      <h1 class="kl-hero-headline"><span class="kl-hl">Ihr mobiles</span><br><em>Geschäft.</em></h1>
+    </div>
+
+    <!-- ENTFERNT DURCH UMBAU — dieser Block wird nicht mehr gerendert -->
+    <div class="kl-slide-labels" style="display:none !important">
+      <div>
+        <div class="kl-slide-label active" data-label="1">
+          <span class="kl-eyebrow">Mobiler Verkaufsanhänger — Direkt vom Hersteller</span>
+          <h1 class="kl-hero-headline">Ihr mobiles<br><em>Geschäft.</em></h1>
+          <p class="kl-hero-sub">Kaufen Sie das Werkzeug und bauen Sie Ihr eigenes mobiles Geschäft auf. Konfigurierbar für jede Branche — direkt von Esselmann Fahrzeugtechnik.</p>
+        </div>
+        <div class="kl-slide-label" data-label="2">
+          <span class="kl-eyebrow">Möglichkeit 1 — Frischemarkt</span>
+          <h2 class="kl-hero-headline">Der Markt<br>kommt zu <em>Ihnen.</em></h2>
+          <p class="kl-hero-sub">Frische Produkte, gekühlt präsentiert. Ihr Karello 40 wird zum Lieblingsstand jedes Wochenmarkts.</p>
+        </div>
+        <div class="kl-slide-label" data-label="3">
+          <span class="kl-eyebrow">Möglichkeit 2 — Barista & Kuchen</span>
+          <h2 class="kl-hero-headline">Cafeteria<br>to <em>go.</em></h2>
+          <p class="kl-hero-sub">Vom Stadtfest bis zum Firmenevent. Espresso, Cappuccino und handgemachte Kuchen, wo Ihre Kunden sind.</p>
+        </div>
+        <div class="kl-slide-label" data-label="4">
+          <span class="kl-eyebrow">Möglichkeit 3 — Street Food</span>
+          <h2 class="kl-hero-headline">Street Food,<br><em>Deutsche</em> Art.</h2>
+          <p class="kl-hero-sub">Der Klassiker neu interpretiert. Konfigurierbar für heiße Snacks bei jedem Wetter.</p>
+        </div>
+        <div class="kl-slide-label" data-label="5">
+          <span class="kl-eyebrow">Möglichkeit 4 — Getränke & Bar</span>
+          <h2 class="kl-hero-headline">Party,<br>wo <em>Sie</em> sind.</h2>
+          <p class="kl-hero-sub">Ob Weinfest, Festival oder Hochzeit. Gekühlte Drinks und Slush Ice direkt aus Ihrem mobilen Stand.</p>
+        </div>
+        <div class="kl-slide-label" data-label="6">
+          <span class="kl-eyebrow">Möglichkeit 5 — Fleisch & Delikatessen</span>
+          <h2 class="kl-hero-headline">Qualität,<br>die <em>bewegt.</em></h2>
+          <p class="kl-hero-sub">Stille ESSELMANN-Kühlung und Edelstahl-Auslage. Ihre Fleischerei oder Delikatessen auf vier Rädern.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Chip rechts (ausgeblendet) -->
+    <div class="kl-product-chip" style="display:none !important">
+      <div class="kl-chip-circle">
+        <div class="kl-chip-inner"></div>
+        <div class="kl-chip-text active" data-chip="1">IHR<br>BUSINESS</div>
+        <div class="kl-chip-text" data-chip="2">FRISCHE-<br>MARKT</div>
+        <div class="kl-chip-text" data-chip="3">CAFE-<br>TERIA</div>
+        <div class="kl-chip-text" data-chip="4">STREET<br>FOOD</div>
+        <div class="kl-chip-text" data-chip="5">COCKTAILS<br>& BAR</div>
+        <div class="kl-chip-text" data-chip="6">FLEISCH<br>& WURST</div>
+      </div>
+      <div class="kl-chip-price">ab <strong>39.900 €</strong> netto</div>
+    </div>
+
+    <!-- Karello Illustration (ausgeblendet) -->
+    <div class="kl-karello-stage" style="display:none !important">
+      <svg class="kl-karello-svg" viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" aria-label="Karello 40 Verkaufsanhänger">
+        <!-- Aufbauten / Kühltheke Schatten -->
+        <defs>
+          <linearGradient id="bodyG" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#e3e4e6"/>
+          </linearGradient>
+          <linearGradient id="wood" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#9a6a3e"/>
+            <stop offset="1" stop-color="#6b4423"/>
+          </linearGradient>
+          <linearGradient id="glass" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="rgba(200,220,235,0.6)"/>
+            <stop offset="1" stop-color="rgba(150,180,205,0.4)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Aufgeklappte Klappe (oben) -->
+        <rect x="210" y="30" width="520" height="12" rx="3" fill="#ffffff" stroke="#c0c3c6" stroke-width="1"/>
+        <rect x="210" y="42" width="520" height="5" fill="#002554" opacity="0.15"/>
+
+        <!-- Hauptaufbau -->
+        <rect x="180" y="55" width="580" height="180" rx="6" fill="url(#bodyG)" stroke="#b0b4b7" stroke-width="1"/>
+
+        <!-- Dunkelblaues Design-Band oben -->
+        <rect x="180" y="55" width="580" height="8" fill="#002554"/>
+
+        <!-- Orange Akzent-Linie -->
+        <rect x="180" y="63" width="580" height="2" fill="#EF7D00"/>
+
+        <!-- Innenraum / Ruckwand Holz -->
+        <rect x="220" y="80" width="500" height="110" fill="url(#wood)"/>
+
+        <!-- LED Leuchtband -->
+        <rect x="220" y="78" width="500" height="3" fill="#fff4c4" opacity="0.9"/>
+        <rect x="220" y="78" width="500" height="3" fill="#fff4c4" filter="blur(2px)" opacity="0.6"/>
+
+        <!-- Theke (Kühlauslage) -->
+        <rect x="220" y="190" width="500" height="45" fill="#f4f4f5"/>
+        <rect x="220" y="190" width="500" height="6" fill="#d6d8da"/>
+        
+        <!-- Glasfront der Theke -->
+        <rect x="220" y="110" width="500" height="80" fill="url(#glass)" opacity="0.3"/>
+        <line x1="220" y1="110" x2="720" y2="110" stroke="#b0b4b7" stroke-width="1"/>
+
+        <!-- Handwaschbereich / Hygieneeinheit (rechts innen) -->
+        <rect x="650" y="110" width="60" height="80" fill="rgba(0,37,84,0.08)"/>
+        <rect x="665" y="140" width="30" height="20" rx="2" fill="#ffffff" stroke="#b0b4b7" stroke-width="0.5"/>
+
+        <!-- Esselmann Logo-Fläche (links an der Front) -->
+        <g transform="translate(195, 150)">
+          <circle cx="15" cy="15" r="13" fill="#002554"/>
+          <polygon points="10,9 20,15 10,21" fill="#EF7D00"/>
+        </g>
+
+        <!-- Fahrgestell / Unterbau -->
+        <rect x="200" y="235" width="560" height="32" fill="#1a1d20"/>
+        <rect x="200" y="235" width="560" height="4" fill="#0a0c0e"/>
+
+        <!-- Stütze (Y-Stütze links) -->
+        <path d="M 205 267 L 200 290 L 210 290 Z" fill="#2a2d30"/>
+        <path d="M 755 267 L 750 290 L 760 290 Z" fill="#2a2d30"/>
+
+        <!-- Deichsel -->
+        <path d="M 180 180 L 70 240 L 180 230 Z" fill="#2a2d30" opacity="0.9"/>
+        <circle cx="75" cy="240" r="10" fill="#1a1d20"/>
+        <circle cx="75" cy="240" r="5" fill="#2a2d30"/>
+
+        <!-- Räder (Tandem) -->
+        <g>
+          <circle cx="350" cy="285" r="35" fill="#1a1d20"/>
+          <circle cx="350" cy="285" r="28" fill="#2a2d30"/>
+          <circle cx="350" cy="285" r="10" fill="#0a0c0e"/>
+        </g>
+        <g>
+          <circle cx="460" cy="285" r="35" fill="#1a1d20"/>
+          <circle cx="460" cy="285" r="28" fill="#2a2d30"/>
+          <circle cx="460" cy="285" r="10" fill="#0a0c0e"/>
+        </g>
+        <g>
+          <circle cx="620" cy="285" r="35" fill="#1a1d20"/>
+          <circle cx="620" cy="285" r="28" fill="#2a2d30"/>
+          <circle cx="620" cy="285" r="10" fill="#0a0c0e"/>
+        </g>
+
+        <!-- Dimensions-Hinweis ganz subtil -->
+        <text x="470" y="50" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="rgba(255,255,255,0.5)" text-anchor="middle">4.200 MM</text>
+      </svg>
+    </div>
+
+    <!-- Slider Controls -->
+    <div class="kl-slider-ctrl">
+      <div class="kl-slider-nav">
+        <button class="kl-slider-btn" id="kl-prev" aria-label="Vorheriger Slide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <button class="kl-slider-btn" id="kl-next" aria-label="Nächster Slide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+      <div class="kl-slider-dots" id="kl-dots">
+        <span class="kl-dot active" data-idx="0"></span>
+        <span class="kl-dot" data-idx="1"></span>
+        <span class="kl-dot" data-idx="2"></span>
+        <span class="kl-dot" data-idx="3"></span>
+      </div>
+    </div>
+
+    <div class="kl-slider-counter">
+      <strong id="kl-current">01</strong> / 04
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIELSEITIGKEIT GRID ============ -->
+<section class="kl-versatility" id="vielseitigkeit">
+  <div class="kl-wrap">
+    <div class="kl-section-head">
+      <div style="font-family:'IBM Plex Sans',sans-serif;font-weight:800;font-size:clamp(72px,10vw,130px);color:var(--kl-blue);line-height:0.9;letter-spacing:-0.03em;margin-bottom:16px;text-transform:uppercase;">KARELLO 40</div>
+      <span class="kl-section-eyebrow">Verkaufsanhänger — Direkt vom Hersteller</span>
+      <h2 class="kl-section-title">Ihre Verkaufsfläche. Sofort einsatzbereit.</h2>
+      <p class="kl-section-lead">Ob für den Imbissstand, zum Verkauf von gekühlter Ware wie Fleisch oder Molkereiprodukten oder als Leeranhänger zum Eigenausbau. Der Karello 40 ist die professionelle Fahrzeugbasis für Ihr Geschäft. Sie wählen die Ausstattung, wir liefern das Fahrzeug.</p>
+    </div>
+
+    <div class="kl-use-grid">
+      <div class="kl-use-card">
+        <span class="kl-use-num">01</span>
+        <div>
+          <h4>Sofort verfügbar</h4>
+          <p>Die Fahrzeuge sind für Kunden gedacht, die schnell in den mobilen Verkauf einsteigen wollen.</p>
+        </div>
+      </div>
+      <div class="kl-use-card">
+        <span class="kl-use-num">02</span>
+        <div>
+          <h4>Robuste Basis</h4>
+          <p>2.700 kg zulässiges Gesamtgewicht, Sandwich-Aufbau und stabile Fahrzeugtechnik für den Alltag.</p>
+        </div>
+      </div>
+      <div class="kl-use-card">
+        <span class="kl-use-num">03</span>
+        <div>
+          <h4>Ausbau nach Bedarf</h4>
+          <p>Leer selbst ausbauen oder direkt mit Esselmann die passende Ausstattung für Ihr Sortiment planen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TECHNISCHE DATEN ============ -->
+<section class="kl-specs" id="specs">
+  <div class="kl-wrap">
+    <div class="kl-section-head" style="text-align:center;">
+      <span class="kl-section-eyebrow">Technische Grunddaten</span>
+      <h2 class="kl-section-title">Das Fundament.</h2>
+      <p class="kl-section-lead">Jahrzehnte Erfahrung im Fahrzeugbau. Solide Technik, die Ihr mobiles Geschäft trägt. Einzelwerte können je nach Variante und Ausbau leicht abweichen.</p>
+    </div>
+
+    <div class="kl-specs-inner">
+      <div class="kl-specs-visual">
+        <!-- PRODUKTFOTO EINBAUEN:
+             Ersetze diesen Platzhalter durch ein echtes Produktfoto des Karello 40.
+             Empfohlene Größe: 1200 x 900 Pixel (4:3-Format, passend zum Rahmen)
+             Format: JPG (Qualität 85 %) oder WebP
+             Motiv: Seitenansicht des Karello 40, idealerweise auf weißem oder hellem Hintergrund.
+             Dateipfad nach Upload in WordPress-Mediathek eintragen, z.B.:
+             src="/wp-content/uploads/2026/04/karello-40-produktfoto.jpg"
+        -->
+        <img
+          src="https://esselmann.de/wp-content/uploads/Karello40-bearbeitet-Kopie.png"
+          alt="Karello 40 mobiler Verkaufsanhänger von Esselmann Fahrzeugtechnik — Seitenansicht"
+          class="kl-specs-photo"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="kl-specs-placeholder" style="display:none;">
+          <div>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#002554" stroke-width="1.5" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <p style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:rgba(0,37,84,0.4);margin-top:12px;text-align:center;">Produktfoto Karello 40<br><strong>1200 × 900 px</strong> (4:3)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="kl-specs-list">
+        <h2 style="font-size: 44px;">Gebaut für Profis.</h2>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Abmessung (innen)</div>
+          <div class="kl-spec-val">ca. 4.200 x 2.230-2.260 x 2.300 mm<small>Länge x Breite x Höhe, je nach Variante</small></div>
+        </div>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Zul. Gesamtgewicht</div>
+          <div class="kl-spec-val">2.700 kg<small>Tandem-Fahrgestell, feuerverzinkt</small></div>
+        </div>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Aufbau</div>
+          <div class="kl-spec-val">44 mm GFK-Sandwich<small>Isoliert, mit Alu-Einfassprofilen</small></div>
+        </div>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Fahrgestell</div>
+          <div class="kl-spec-val">ESSELMANN Niederrahmenfahrgestell<small>Stabile Basis für den Verkaufsalltag</small></div>
+        </div>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Kühlausstattung</div>
+          <div class="kl-spec-val">4,2 m stille Kühltheke möglich<small>740 mm Auslage bei der Kühlvariante</small></div>
+        </div>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Bremse</div>
+          <div class="kl-spec-val">Auflaufbremse<small>Inkl. Stützrad und 4 Y-Stützen</small></div>
+        </div>
+        <div class="kl-spec-row">
+          <div class="kl-spec-key">Elektrik</div>
+          <div class="kl-spec-val">12V / 13-polig<small>LED-Fahrzeugbeleuchtung nach StVZO, Innenbeleuchtung je nach Ausbau</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUSSTATTUNG ============ -->
+<section class="kl-equipment" id="ausstattung">
+  <div class="kl-wrap">
+    <div class="kl-section-head" style="text-align:center;">
+      <span class="kl-section-eyebrow">Ausstattung</span>
+      <h2 class="kl-section-title">Ausstattung nach Bedarf.</h2>
+      <p class="kl-section-lead">Sie entscheiden, wie weit der Ausbau geht: leerer Verkaufsanhänger, vorbereitete Verkaufseinrichtung oder produktgerechter Innenausbau.</p>
+    </div>
+
+    <div class="kl-equip-grid">
+      <div class="kl-equip-col">
+        <span class="kl-equip-tag">Basis-Anhänger</span>
+        <h3>Technisches Fundament</h3>
+        <ul class="kl-equip-list" style="margin-top: 24px;">
+          <li><span class="kl-check">✓</span>Feuerverzinktes Tandem-Fahrgestell</li>
+          <li><span class="kl-check">✓</span>Auflaufbremse & Stützrad</li>
+          <li><span class="kl-check">✓</span>4 Y-Stützen für stabilen Stand</li>
+          <li><span class="kl-check">✓</span>Isolierter 44 mm GFK-Sandwichaufbau</li>
+          <li><span class="kl-check">✓</span>Alu-Einfassprofile mit Rangiergriffen</li>
+          <li><span class="kl-check">✓</span>Isolierfussboden inkl. Fussbodenbelag</li>
+          <li><span class="kl-check">✓</span>Verkaufsklappe rechts</li>
+          <li><span class="kl-check">✓</span>Einstiegstür und Klappe vorn</li>
+          <li><span class="kl-check">✓</span>LED-Fahrzeugbeleuchtung nach StVZO</li>
+          <li><span class="kl-check">✓</span>Aufbau in weiß (individuell folierbar)</li>
+        </ul>
+      </div>
+      <div class="kl-equip-col">
+        <span class="kl-equip-tag">Ausbaupakete</span>
+        <h3>Nach Produkt geplant</h3>
+        <ul class="kl-equip-list" style="margin-top: 24px;">
+          <li><span class="kl-check">✓</span>Imbiss-Ausstattung für warme Speisen und schnelle Abläufe</li>
+          <li><span class="kl-check">✓</span>Kühlausstattung für Fleisch, Wurst, Molkereiprodukte und Feinkost</li>
+          <li><span class="kl-check">✓</span>Verkaufsausstattung für Blumen, Textil, Backwaren und weitere Waren</li>
+          <li><span class="kl-check">✓</span>Verkaufskühltheke mit 740 mm Auslage möglich</li>
+          <li><span class="kl-check">✓</span>Edelstahl-Einlegebleche und senkrechte Thekenglasfront möglich</li>
+          <li><span class="kl-check">✓</span>LED-Spots, LED-Leuchtband und Rückwandausleuchtung möglich</li>
+          <li><span class="kl-check">✓</span>Hygieneeinheit mit Handwaschbecken möglich</li>
+          <li><span class="kl-check">✓</span>Klappbares Taschenbrett, Ablagen und weitere Arbeitshilfen möglich</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Optionen -->
+    <div class="kl-options">
+      <span class="kl-equip-tag">Konfigurierbar</span>
+      <h3 style="color: var(--kl-orange);">Sonderausstattungen</h3>
+      <p class="kl-options-lead">Passen Sie den Karello 40 an Ihr Geschäftsmodell an.</p>
+
+      <div class="kl-options-table">
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Seitenblende Wetterschutz links</div>
+            <div class="kl-option-desc">Fest anscharniert, Acrylglas grau, Alublech in Fahrzeugfarbe</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Seitenblende Wetterschutz rechts</div>
+            <div class="kl-option-desc">Fest anscharniert, Acrylglas grau, Alublech in Fahrzeugfarbe</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Windschutzverglasung klappbar</div>
+            <div class="kl-option-desc">Acrylglas, schützt die Verkaufsauslage bei jedem Wetter</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">2x Wandbord mit Reling</div>
+            <div class="kl-option-desc">Höhenverstellbar, Auslagenlänge 1,5 m, Bordaufsatz 60 mm</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Kassenschublade Dekor</div>
+            <div class="kl-option-desc">Touch-öffnung, 4 Geldscheinfächer, 8 Münzfächer, Sicherheitsschloss</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Nachtabdeckung</div>
+            <div class="kl-option-desc">Lose Acrylglasabdeckung für Thekeneingrifföffnung</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Volant Trevira Wellenform</div>
+            <div class="kl-option-desc">Einfarbig, in Kederschiene einziehbar, Höhe 300 mm</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Waagenplatte Dekor</div>
+            <div class="kl-option-desc">Schiebbar mit Feststeller, 350 x 400 mm</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Trennscheiben für Thekenauslage</div>
+            <div class="kl-option-desc">Acrylglas für 740/800 mm Auslage</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Schneideplatte mit Saftrille</div>
+            <div class="kl-option-desc">Auf Thekenarbeitsfläche, schiebbar, 430 x 380 mm</div>
+          </div>
+        </div>
+        <div class="kl-option-row">
+          <div>
+            <div class="kl-option-name">Individuelle Außenfolierung</div>
+            <div class="kl-option-desc">Komplettfolierung mit druckfertigen Daten, Ihr Markenauftritt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ USPs (01-04 Style) ============ -->
+<section class="kl-usps" id="features">
+  <div class="kl-wrap">
+    <div class="kl-section-head">
+      <span class="kl-section-eyebrow">Warum Karello 40</span>
+      <h2 class="kl-section-title">Gebaut für den<br>mobilen Erfolg.</h2>
+      <p class="kl-section-lead">Vier Gründe, warum der Karello 40 eine starke Basis für Ihr mobiles Geschäft ist.</p>
+    </div>
+
+    <div class="kl-usp-grid">
+      <div class="kl-usp-card">
+        <div class="kl-usp-num">01.</div>
+        <h3>Flexible Basis</h3>
+        <p>Starten Sie mit einem leeren Verkaufsanhänger und entscheiden Sie selbst, wie weit der Ausbau gehen soll.</p>
+      </div>
+      <div class="kl-usp-card">
+        <div class="kl-usp-num">02.</div>
+        <h3>Ausbau nach Produkt</h3>
+        <p>Ob Imbiss, Kühlung oder Verkaufsausstattung: Der Innenraum wird passend zu Ihrem Sortiment geplant.</p>
+      </div>
+      <div class="kl-usp-card">
+        <div class="kl-usp-num">03.</div>
+        <h3>Robust & langlebig</h3>
+        <p>Feuerverzinktes Tandem-Fahrgestell und 44 mm GFK-Sandwichaufbau. Made in Germany, jahrzehntelang.</p>
+      </div>
+      <div class="kl-usp-card highlight">
+        <div class="kl-usp-num">04.</div>
+        <h3>Preis-Leistung</h3>
+        <p>Attraktives Preis-Leistungs-Verhältnis für alle, die ihr mobiles Geschäft wirtschaftlich aufbauen wollen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA STRIP 2 ============ -->
+<div class="kl-cta-strip kl-cta-strip--dark">
+  <p>Unsicher, welche Variante passt? Simon Serra berät Sie persönlich.</p>
+  <a href="#kontakt" class="kl-btn kl-btn-primary">
+    Angebot für Karello 40 erhalten
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<!-- ============ AUSSTATTUNGSVARIANTEN ============ -->
+<section class="kl-variants" id="varianten">
+  <div class="kl-wrap">
+    <div class="kl-section-head">
+      <span class="kl-section-eyebrow">Drei Varianten</span>
+      <h2 class="kl-section-title" style="color: var(--kl-blue);">Wählen Sie den passenden Karello.</h2>
+      <p class="kl-section-lead">Vom leeren Verkaufsanhänger bis zum sofort nutzbaren Ausbau: Hier finden Interessenten direkt das passende Fahrzeugangebot.</p>
+    </div>
+
+    <div class="kl-variant-grid">
+      <article class="kl-variant-card">
+        <span class="kl-variant-tag">Imbiss</span>
+        <h3>Karello 40 mit Imbiss-Ausstattung</h3>
+        <p>Für warme Speisen, Snacks, Streetfood und Catering. Sofort verfügbarer Verkaufsanhänger mit praxisnaher Ausstattung.</p>
+        <div class="kl-variant-price">
+          <span>Preis ab Werk</span>
+          <strong>42.900 €</strong>
+        </div>
+        <ul class="kl-variant-list">
+          <li>Ubert Gas-Fritteuse und Gas Rost-/Griddlebräter-Kombination</li>
+          <li>Liebherr Kühl- und Gefrierschrank</li>
+          <li>Hygieneeinheit, LED-Beleuchtung und Gasflaschenschrank</li>
+        </ul>
+        <div class="kl-variant-actions">
+          <a href="https://esselmann.de/portfolio-item/413361-3/" class="kl-btn kl-btn-primary">
+            Imbiss-Fahrzeug ansehen
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="kl-variant-source">Link führt zur Fahrzeugseite auf esselmann.de.</div>
+      </article>
+
+      <article class="kl-variant-card">
+        <span class="kl-variant-tag">Kühlung</span>
+        <h3>Karello 40 mit Kühlausstattung</h3>
+        <p>Für Fleisch, Wurst, Molkereiprodukte und Feinkost. Mit stiller Kühltheke und professioneller Verkaufsauslage.</p>
+        <div class="kl-variant-price">
+          <span>Preis ab Werk</span>
+          <strong>39.900 €</strong>
+        </div>
+        <ul class="kl-variant-list">
+          <li>4,2 m stille Kühltheke mit 740 mm Auslage</li>
+          <li>-32 °C Kühlmaschine und Kühlfach unter der Theke</li>
+          <li>LED-Beleuchtung, Hygienepaket und offene Rückwandgestaltung</li>
+        </ul>
+        <div class="kl-variant-actions">
+          <a href="https://esselmann.de/portfolio-item/karello4-2/" class="kl-btn kl-btn-primary">
+            Kühl-Fahrzeug ansehen
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="kl-variant-source">Link führt zur Fahrzeugseite auf esselmann.de.</div>
+      </article>
+
+      <article class="kl-variant-card">
+        <span class="kl-variant-tag">Leerfahrzeug</span>
+        <h3>Karello 40 als leerer Verkaufsanhänger</h3>
+        <p>Die wirtschaftliche Basis für eigene Umbauten. Ideal, wenn Kunden den Innenausbau selbst planen oder später nachrüsten wollen.</p>
+        <div class="kl-variant-price">
+          <span>Preis netto</span>
+          <strong>13.800 €</strong>
+        </div>
+        <ul class="kl-variant-list">
+          <li>Neufahrzeug mit 2.700 kg zulässigem Gesamtgewicht</li>
+          <li>Innen ca. 4.200 x 2.230 x 2.300 mm</li>
+          <li>44 mm GFK-Sandwichaufbau und verzinktes Chassis</li>
+        </ul>
+        <div class="kl-variant-actions">
+          <a href="https://esselmann.de/portfolio-item/413361-3-2/" class="kl-btn kl-btn-primary" target="_blank" rel="noopener">
+            Leer-Fahrzeug ansehen
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="kl-variant-source">Link führt zur Fahrzeugseite auf esselmann.de.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PREIS BANNER ============ -->
+<section class="kl-price-banner">
+  <div class="kl-wrap">
+    <div class="kl-price-inner">
+      <div>
+        <div class="kl-price-label">Die Investition</div>
+        <h2 class="kl-price-headline">Ein Fahrzeug,<br>unbegrenzte<br>Einsatzmöglichkeiten.</h2>
+        <p class="kl-price-text">Der Karello 40 bietet ein attraktives Preis-Leistungs-Verhältnis als flexible Basis für Ihr mobiles Geschäft. Der passende Ausbau wird nach Ihrem Produkt und Einsatzbereich geplant. Lieferbedingungen: Ab Werk. Zahlbar netto nach Rechnungserhalt.</p>
+      </div>
+      <div class="kl-price-box">
+        <div class="kl-price-from">Grundpreis ab</div>
+        <div class="kl-price-value">39.900<span class="kl-price-currency">€</span></div>
+        <div class="kl-price-note">zzgl. MwSt., abhängig von Ausstattung und Ausbau</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINANZIERUNG ============ -->
+<section class="kl-financing" id="finanzierung">
+  <div class="kl-wrap">
+    <div class="kl-section-head" style="text-align:center;">
+      <span class="kl-section-eyebrow">Mietkauf — HW Leasing GmbH</span>
+      <h2 class="kl-section-title">Ihr Karello.<br>Sofort. Monatlich.</h2>
+      <p class="kl-section-lead">Statt Einmalzahlung einfach monatlich finanzieren — und das Fahrzeug gehört Ihnen nach Laufzeit vollständig. Kein Leasing, kein Rückgabezwang.</p>
+    </div>
+
+    <div class="kl-fin-grid">
+
+      <!-- Variante 1: Kühlung / Imbiss -->
+      <div class="kl-fin-card">
+        <span class="kl-fin-badge">Mietkauf</span>
+        <div class="kl-fin-tag">Variante — ausgebaut</div>
+        <div class="kl-fin-vehicle">Karello 40 mit Kühl- oder<br>Imbissausstattung</div>
+
+        <div class="kl-fin-rate-wrap">
+          <div class="kl-fin-rate-label">Monatliche Rate ab</div>
+          <div class="kl-fin-rate"><sup>€</sup> 510<span>,– / Monat</span></div>
+        </div>
+
+        <dl class="kl-fin-details">
+          <div class="kl-fin-detail-row">
+            <dt>Nettoanschaffungswert</dt>
+            <dd>39.900 €</dd>
+          </div>
+          <div class="kl-fin-detail-row">
+            <dt>Anzahlung (20 %)</dt>
+            <dd>7.980 €</dd>
+          </div>
+          <div class="kl-fin-detail-row">
+            <dt>Laufzeit</dt>
+            <dd>72 Monate</dd>
+          </div>
+          <div class="kl-fin-detail-row">
+            <dt>Schlussrate</dt>
+            <dd>3.990 €</dd>
+          </div>
+        </dl>
+
+        <div class="kl-fin-cta">
+          <a href="#kontakt" class="kl-btn kl-btn-ghost">
+            Finanzierung anfragen
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <p class="kl-fin-note">Freibleibendes Angebot, Bonität vorausgesetzt. 1.–71. Monat € 510,02 zzgl. MwSt. Abweichende Schlussrate € 3.990. Finanzierungspartner: HW Leasing GmbH.</p>
+      </div>
+
+      <!-- Variante 2: Vollausbau -->
+      <div class="kl-fin-card kl-fin-card--highlight">
+        <span class="kl-fin-badge">Mietkauf</span>
+        <div class="kl-fin-tag">Variante — individuell ausgebaut</div>
+        <div class="kl-fin-vehicle">Karello 40<br>Vollausbau nach Maß</div>
+
+        <div class="kl-fin-rate-wrap">
+          <div class="kl-fin-rate-label">Monatliche Rate ab</div>
+          <div class="kl-fin-rate"><sup>€</sup> 1.082<span>,– / Monat</span></div>
+        </div>
+
+        <dl class="kl-fin-details">
+          <div class="kl-fin-detail-row">
+            <dt>Nettoanschaffungswert</dt>
+            <dd>85.000 €</dd>
+          </div>
+          <div class="kl-fin-detail-row">
+            <dt>Anzahlung (20 %)</dt>
+            <dd>17.000 €</dd>
+          </div>
+          <div class="kl-fin-detail-row">
+            <dt>Laufzeit</dt>
+            <dd>72 Monate</dd>
+          </div>
+          <div class="kl-fin-detail-row">
+            <dt>Schlussrate</dt>
+            <dd>8.500 €</dd>
+          </div>
+        </dl>
+
+        <div class="kl-fin-cta">
+          <a href="#kontakt" class="kl-btn kl-btn-ghost">
+            Finanzierung anfragen
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <p class="kl-fin-note">Freibleibendes Angebot, Bonität vorausgesetzt. 1.–71. Monat € 1.081,53 zzgl. MwSt. Abweichende Schlussrate € 8.500. Finanzierungspartner: HW Leasing GmbH.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / SIMON SERRA ============ -->
+<section class="kl-cta" id="kontakt">
+  <div class="kl-wrap">
+    <div class="kl-cta-inner">
+      <div class="kl-cta-text">
+        <span class="kl-cta-eyebrow">Persönliche Beratung</span>
+        <h2 class="kl-cta-headline">Ihr <em>nächster Schritt</em><br>beginnt hier.</h2>
+        <p class="kl-cta-sub">Sprechen Sie direkt mit unserem Vertriebsleiter Simon Serra. Er plant mit Ihnen Ihre individuelle Ausstattung und beantwortet alle Fragen rund um Ausbau, Finanzierung, Lieferzeiten und Folierung.</p>
+        <!-- Kontaktformular (Contact Form 7) -->
+        <div class="kl-rm-wrap">
+          [contact-form-7 id="7eec5b2" title="Basis Kontaktformular - Karello 40"]
+          <!-- CF7 Styling für dunklen Hintergrund -->
+          <style>
+            .karello-lp .kl-rm-wrap .wpcf7-form p { margin-bottom: 12px; }
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="text"],
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="email"],
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="tel"],
+            .karello-lp .kl-rm-wrap .wpcf7-form textarea {
+              background: rgba(255,255,255,0.12);
+              border: none;
+              border-radius: 8px;
+              box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+              color: #fff;
+              font-family: 'IBM Plex Sans', sans-serif;
+              font-size: 15px;
+              height: 48px;
+              padding: 0 16px;
+              width: 100%;
+            }
+            .karello-lp .kl-rm-wrap .wpcf7-form textarea {
+              height: 120px;
+              padding: 14px 16px;
+              resize: vertical;
+            }
+            .karello-lp .kl-rm-wrap .wpcf7-form input::placeholder,
+            .karello-lp .kl-rm-wrap .wpcf7-form textarea::placeholder {
+              color: rgba(255,255,255,0.5);
+            }
+            .karello-lp .kl-rm-wrap .wpcf7-form input:focus,
+            .karello-lp .kl-rm-wrap .wpcf7-form textarea:focus {
+              outline: none;
+              box-shadow: inset 0 0 0 2px #EF7D00;
+              background: rgba(255,255,255,0.18);
+            }
+            .karello-lp .kl-rm-wrap .wpcf7-form label {
+              color: rgba(255,255,255,0.7);
+              font-family: 'IBM Plex Sans', sans-serif;
+              font-size: 13px;
+              display: block;
+              margin-bottom: 6px;
+            }
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="submit"] {
+              background: #EF7D00;
+              border: none;
+              border-radius: 8px;
+              color: #fff;
+              cursor: pointer;
+              font-family: 'IBM Plex Sans', sans-serif;
+              font-size: 16px;
+              font-weight: 700;
+              height: auto;
+              padding: 14px 28px;
+              width: 100%;
+              transition: background .2s;
+              box-shadow: none;
+            }
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="submit"]:hover { background: #d66f00; }
+            .karello-lp .kl-rm-wrap .wpcf7-not-valid-tip { color: #ffb3b3; font-size: 12px; }
+            .karello-lp .kl-rm-wrap .wpcf7-response-output {
+              color: rgba(255,255,255,0.85);
+              border-color: rgba(255,255,255,0.2);
+              font-size: 14px;
+              margin-top: 12px;
+              padding: 10px 16px;
+              border-radius: 8px;
+            }
+            /* Alle Labels im Formular weiß */
+            .karello-lp .kl-rm-wrap .wpcf7-form label,
+            .karello-lp .kl-rm-wrap .wpcf7-form p label,
+            .karello-lp .kl-rm-wrap .wpcf7-form span label,
+            .karello-lp .kl-rm-wrap .wpcf7-form p > label:first-child {
+              color: rgba(255,255,255,0.7) !important;
+              font-family: 'IBM Plex Sans', sans-serif !important;
+              font-size: 15px !important;
+              font-weight: 400 !important;
+              display: block;
+              margin-bottom: 6px;
+            }
+            /* Optionstext der Checkboxen / Radio-Buttons */
+            .karello-lp .kl-rm-wrap .wpcf7-form .wpcf7-list-item label,
+            .karello-lp .kl-rm-wrap .wpcf7-form .wpcf7-list-item-label {
+              color: #ffffff !important;
+              font-family: 'IBM Plex Sans', sans-serif;
+              font-size: 15px;
+              font-weight: 400;
+              cursor: pointer;
+            }
+            /* Radio/Checkbox selbst */
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="radio"],
+            .karello-lp .kl-rm-wrap .wpcf7-form input[type="checkbox"] {
+              accent-color: #EF7D00;
+              width: 16px;
+              height: 16px;
+              cursor: pointer;
+              flex-shrink: 0;
+            }
+            /* Listenpunkte als Flex-Zeile */
+            .karello-lp .kl-rm-wrap .wpcf7-form .wpcf7-list-item {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 10px;
+            }
+          </style>
+        </div>
+        <div style="display:none;"><!-- RAPIDMAIL ENTFERNT --><div id="rmOrganism">
+            <div class="rmEmbed rmLayout--vertical rmBase">
+              <div data-page-type="formSubscribe" class="rmBase__body rmSubscription">
+                <form method="post" action="https://news.esselmann.de/203/2579/9d9acf7c95/subscribe/form.html?_g=1777033445" class="rmBase__content">
+                  <div class="rmBase__container">
+                    <div class="rmBase__section">
+                      <div class="rmBase__el rmBase__el--input rmBase__el--label-pos-top" data-field="firstname">
+                        <label for="rm-firstname" class="rmBase__compLabel rmBase__compLabel--hideable">Vorname</label>
+                        <div class="rmBase__compContainer">
+                          <input type="text" name="firstname" id="rm-firstname" placeholder="Vorname" value="" class="rmBase__comp--input comp__input">
+                          <div class="rmBase__compError"></div>
+                        </div>
+                      </div>
+                      <div class="rmBase__el rmBase__el--input rmBase__el--label-pos-top" data-field="lastname">
+                        <label for="rm-lastname" class="rmBase__compLabel rmBase__compLabel--hideable">Nachname</label>
+                        <div class="rmBase__compContainer">
+                          <input type="text" name="lastname" id="rm-lastname" placeholder="Nachname" value="" class="rmBase__comp--input comp__input">
+                          <div class="rmBase__compError"></div>
+                        </div>
+                      </div>
+                      <div class="rmBase__el rmBase__el--input rmBase__el--label-pos-top" data-field="10361b63-6229-48ae-b913-ddfdf32498f7">
+                        <label for="rm-interest" class="rmBase__compLabel rmBase__compLabel--hideable">Ihr Interesse</label>
+                        <div class="rmBase__compContainer">
+                          <input type="text" name="10361b63-6229-48ae-b913-ddfdf32498f7" id="rm-interest" placeholder="Was möchten Sie verkaufen?" value="" class="rmBase__comp--input comp__input">
+                          <div class="rmBase__compError"></div>
+                        </div>
+                      </div>
+                      <div class="rmBase__el rmBase__el--input rmBase__el--label-pos-top" data-field="email">
+                        <label for="rm-email" class="rmBase__compLabel rmBase__compLabel--hideable rmBase__compLabel--required">E-Mail-Adresse</label>
+                        <div class="rmBase__compContainer">
+                          <input type="text" name="email" id="rm-email" placeholder="E-Mail" value="" class="rmBase__comp--input comp__input">
+                          <div class="rmBase__compError"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="rmBase__section">
+                      <div class="rmBase__el rmBase__el--captcha" data-field="captcha">
+                        <div class="rmBase__comp--captcha">
+                          <div class="rm--captcha-container"></div>
+                          <div class="rmBase__compError"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="rmBase__section">
+                      <div class="rmBase__el rmBase__el--cta">
+                        <button type="submit" class="rmBase__comp--cta">Angebot für Karello 40 erhalten</button>
+                      </div>
+                    </div>
+                    <div class="rmBase__section">
+                      <div class="rmBase__el rmBase__el--data-privacy">
+                        <div class="rmBase__comp--privacy">
+                          <p class="privacy__text">Für den Versand unserer Newsletter nutzen wir rapidmail. Mit Ihrer Anmeldung stimmen Sie zu, dass die eingegebenen Daten an rapidmail übermittelt werden. Beachten Sie bitte auch die AGB und Datenschutzbestimmungen.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div data-page-type="pageSubscribeSuccess" class="rmBase__body rmSubscription hidden">
+                <div class="rmBase__content">
+                  <div class="rmBase__container">
+                    <div class="rmBase__section">
+                      <div class="rmBase__el rmBase__el--heading">
+                        <h2 class="rmBase__comp--heading">Vielen Dank!<br></h2>
+                      </div>
+                    </div>
+                    <div class="rmBase__section">
+                      <div class="rmBase__el rmBase__el--text">
+                        <div class="rmBase__comp--text">Wir haben Ihnen eine Bestätigungs-E-Mail geschickt. Simon Serra meldet sich zeitnah bei Ihnen.<br></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <style>
+            #rmOrganism .rmBase { background: transparent; color: var(--kl-ink, #0A1628); font-family: 'IBM Plex Sans', sans-serif; max-width: 100%; }
+            #rmOrganism .rmSubscription { background: transparent; font-family: 'IBM Plex Sans', sans-serif; }
+            #rmOrganism .rmSubscription .rmBase__container { padding: 0; }
+            #rmOrganism .rmBase__el { font-size: 15px; margin-bottom: 12px; }
+            #rmOrganism .rmBase__el .comp__input { background: rgba(255,255,255,0.12); border: none; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; height: 48px; padding: 0 16px; width: 100%; }
+            #rmOrganism .rmBase__el .comp__input::placeholder { color: rgba(255,255,255,0.5); opacity: 1; }
+            #rmOrganism .rmBase__el .comp__input:focus { box-shadow: inset 0 0 0 2px #EF7D00; outline: none; background: rgba(255,255,255,0.18); }
+            #rmOrganism .rmBase__compLabel { display: none; }
+            #rmOrganism .rmBase__comp--cta { background: #EF7D00; border: none; border-radius: 8px; color: #fff; cursor: pointer; display: block; font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 700; padding: 14px 24px; text-align: center; width: 100%; transition: background .2s; }
+            #rmOrganism .rmBase__comp--cta:hover { background: #d66f00; }
+            #rmOrganism .rmBase__comp--privacy { display: block; }
+            #rmOrganism .privacy__text { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+            #rmOrganism .rmBase__compError { color: #fff; background: #c0392b; border-radius: 4px; font-size: 12px; padding: 2px 8px; margin-top: 4px; display: none; }
+            #rmOrganism .rmBase__el--has-error .rmBase__compError { display: block; }
+            #rmOrganism .rmSubscription .rmBase__comp--heading { color: #fff; font-size: 28px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 800; }
+            #rmOrganism .rmSubscription .rmBase__comp--text { color: rgba(255,255,255,0.8); font-size: 15px; }
+            #rmOrganism .hidden { display: none !important; }
+          </style>
+          <script src="https://news.esselmann.de/form/203/2579/893e833534/embedded.js"></script>
+        </div>
+      </div>
+
+      <div class="kl-contact-card">
+        <div class="kl-contact-header">
+          <img src="https://esselmann.de/wp-content/uploads/kontakt-simon-serra.jpg" alt="Simon Serra" class="kl-contact-avatar" />
+          <div class="kl-contact-meta">
+            <h4>Simon Serra</h4>
+            <div class="kl-contact-role">Vertriebsleitung · Lengenbostel</div>
+          </div>
+        </div>
+        <div class="kl-contact-items">
+          <a class="kl-contact-item" href="tel:+4942825091516">
+            <div class="kl-contact-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            +49 42 82 / 50 91 5-16
+          </a>
+          <a class="kl-contact-item" href="tel:+491732959820">
+            <div class="kl-contact-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            +49 173 2 95 98 20
+          </a>
+          <a class="kl-contact-item" href="mailto:simon.serra@esselmann.de">
+            <div class="kl-contact-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            simon.serra@esselmann.de
+          </a>
+          <div class="kl-contact-item">
+            <div class="kl-contact-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            Schmiedestraße 1, 27419 Lengenbostel
+          </div>
+          <div class="kl-contact-item">
+            <div class="kl-contact-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            Mo-Fr 08:00 bis 17:00 Uhr
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="kl-footer">
+  <div class="kl-footer-small">
+    <span>ESSELMANN</span> Fahrzeugtechnik GmbH & Co. KG · Schmiedestraße 1 · 27419 Lengenbostel · www.esselmann.de
+  </div>
+</footer>
+
+<script>
+(function() {
+  // Scope auf .karello-lp
+  var root = document.currentScript.closest('.karello-lp') || document.querySelector('.karello-lp');
+  if (!root) return;
+
+  var slides  = root.querySelectorAll('.kl-slide');
+  var labels  = root.querySelectorAll('.kl-slide-label');
+  var chips   = root.querySelectorAll('.kl-chip-text');
+  var dots    = root.querySelectorAll('.kl-dot');
+  var prevBtn = root.querySelector('#kl-prev');
+  var nextBtn = root.querySelector('#kl-next');
+  var counter = root.querySelector('#kl-current');
+
+  var current = 0;
+  var total = slides.length;
+  var autoplayTimer = null;
+
+  function setSlide(idx) {
+    if (idx < 0) idx = total - 1;
+    if (idx >= total) idx = 0;
+    current = idx;
+
+    slides.forEach(function(s, i) { s.classList.toggle('active', i === idx); });
+    labels.forEach(function(l, i) { l.classList.toggle('active', i === idx); });
+    chips.forEach(function(c, i)  { c.classList.toggle('active', i === idx); });
+    dots.forEach(function(d, i)   { d.classList.toggle('active', i === idx); });
+    if (counter) counter.textContent = String(idx + 1).padStart(2, '0');
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayTimer = setInterval(function() { setSlide(current + 1); }, 5500);
+  }
+  function stopAutoplay() {
+    if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function() { setSlide(current - 1); startAutoplay(); });
+  if (nextBtn) nextBtn.addEventListener('click', function() { setSlide(current + 1); startAutoplay(); });
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      setSlide(parseInt(dot.getAttribute('data-idx'), 10));
+      startAutoplay();
+    });
+  });
+
+  // Pausiere bei Hover
+  var hero = root.querySelector('.kl-hero');
+  if (hero) {
+    hero.addEventListener('mouseenter', stopAutoplay);
+    hero.addEventListener('mouseleave', startAutoplay);
+  }
+
+  // Keyboard Navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft')  { setSlide(current - 1); startAutoplay(); }
+    if (e.key === 'ArrowRight') { setSlide(current + 1); startAutoplay(); }
+  });
+
+  startAutoplay();
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Karello 40",
+  "description": "Karello 40 Verkaufsanhaenger als flexible Basis fuer ein mobiles Verkaufsgeschaeft. Leer nutzbar oder mit Ausbau fuer Imbiss, Kuehlung und Verkaufsausstattung. Direkt vom Hersteller Esselmann Fahrzeugtechnik.",
+  "brand": {
+    "@type": "Brand",
+    "name": "Esselmann Fahrzeugtechnik"
+  },
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "Esselmann Fahrzeugtechnik GmbH & Co. KG",
+    "url": "https://www.esselmann.de",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+49-4282-509151-6",
+      "contactType": "sales",
+      "name": "Simon Serra",
+      "email": "simon.serra@esselmann.de"
+    }
+  },
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": "13800",
+    "highPrice": "42900",
+    "offerCount": "3",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Esselmann Fahrzeugtechnik GmbH & Co. KG"
+    }
+  },
+  "additionalProperty": [
+    { "@type": "PropertyValue", "name": "Laenge", "value": "4200 mm" },
+    { "@type": "PropertyValue", "name": "Breite", "value": "2260 mm" },
+    { "@type": "PropertyValue", "name": "Hoehe", "value": "2300 mm" },
+    { "@type": "PropertyValue", "name": "Gesamtgewicht", "value": "2700 kg" }
+  ]
+}
+</script>
+</div>
+<!-- ============ ENDE KARELLO 40 LANDINGPAGE ============ -->
