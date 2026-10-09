@@ -440,3 +440,30 @@
 @media (prefers-reduced-motion: reduce) {
 	.kl-changed { animation: none; }
 }
+
+/* Ideal-Empfehlung, Tiefenregler, Fotos */
+.kl .kl-ideal {
+	background: var(--kl-head);
+	color: var(--kl-head-ink);
+	border-radius: 8px;
+	padding: 14px 16px;
+	font-size: 1.05rem;
+	line-height: 1.45;
+	scroll-margin-top: 12px;
+}
+.kl .kl-ideal b { display: block; font: 700 1rem/1.2 var(--kl-cond); letter-spacing: .12em; text-transform: uppercase; color: var(--kl-accent); margin-bottom: 4px; }
+.kl .kl-ideal em { font-style: normal; font-weight: 700; }
+.kl .kl-lab-label { font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.kl .kl-goto { width: 100%; padding: 12px 16px; }
+.kl-photo { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 6px; object-fit: contain; background: var(--kl-surface2); }
+.kl-alt .kl-photo, .kl-lexi .kl-photo { max-height: 140px; }
+.kl-photo-wrap { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; align-items: center; width: 100%; max-width: 640px; }
+.kl-photo-wrap .kl-photo { max-height: 260px; }
+.kl .kl-colprev { display: grid; gap: 4px; text-align: center; }
+.kl .kl-colprev figcaption { font: 600 .78rem/1 var(--kl-cond); letter-spacing: .1em; text-transform: uppercase; color: var(--kl-ink2); }
+@media (min-width: 900px) {
+	.kl .kl-goto { display: none; }
+}
+@media (max-width: 480px) {
+	.kl-photo-wrap { grid-template-columns: minmax(0, 1fr); }
+}

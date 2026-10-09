@@ -29,6 +29,8 @@
 	var rgb2hex = function (c) {
 		return '#' + c.map(function (v) { var s = Math.round(clamp(v, 0, 255)).toString(16); return s.length < 2 ? '0' + s : s; }).join('');
 	};
+	var IMG = (window.KOEDER_LABOR_IMAGES && typeof window.KOEDER_LABOR_IMAGES === 'object') ? window.KOEDER_LABOR_IMAGES : {};
+	var escAttr = function (v) { return String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
 	var store = {
 		get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
 		set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* privater Modus */ } }
@@ -48,13 +50,14 @@
 	var SP_LIST = [['hecht', 'Hecht'], ['zander', 'Zander'], ['barsch', 'Flussbarsch'], ['wels', 'Wels'], ['rapfen', 'Rapfen'], ['forelle', 'Bachforelle']];
 	var SP_ODD = { wels: ['bach', 'teich'], zander: ['bach', 'teich'], rapfen: ['see', 'teich', 'bach', 'talsperre'], forelle: ['kanal', 'teich', 'see'] };
 
+	var DRANGE = { see: [2, 12], talsperre: [4, 20], fluss: [1.5, 6], kanal: [3, 5], bach: [1, 2], teich: [1, 3] };
 	var WATER = {
-		see:       { n: 'See / Baggersee',   s: 'stehend, 3–15 m', maxD: 12, cur: 0,    note: 'Stehendes Gewässer: Der Köder arbeitet nur durch deine Führung, Strömung hilft nicht mit.' },
-		talsperre: { n: 'Talsperre',         s: 'tief, oft klar',   maxD: 25, cur: 0,    note: 'Tiefe, oft klare Talsperre: Fische stehen an Kanten, Steilufern und im Freiwasser über Baumresten.' },
-		fluss:     { n: 'Fluss',             s: 'Strömung, Buhnen', maxD: 6,  cur: 1,    note: 'Strömung drückt auf den Köder: Gewicht erhöhen, Kehrwasser und Strömungskanten gezielt befischen.' },
-		kanal:     { n: 'Kanal / Hafen',     s: 'Spundwand, Brücken', maxD: 5, cur: 0.25, note: 'Kanäle sind gleichmäßig tief: Fische stehen an Spundwänden, Brückenpfeilern, Schiffsliegeplätzen und Einmündungen.' },
-		bach:      { n: 'Bach / kl. Fluss',  s: 'Gumpen, Kehrwasser', maxD: 2, cur: 1,   note: 'Flaches, schnelles Wasser: kleine, leichte Köder, Anwurf quer oder stromauf, Standplätze hinter Steinen.' },
-		teich:     { n: 'Teich / Weiher',    s: 'flach, verkrautet', maxD: 3,  cur: 0,   note: 'Flach und warm: Fische reagieren stark auf Licht und Temperatur, Oberflächenköder und hängerarme Montagen sind oft gefragt.' }
+		see:       { n: 'See / Baggersee',   s: 'stehend, 3–15 m', maxD: 6, cur: 0,    note: 'Stehendes Gewässer: Der Köder arbeitet nur durch deine Führung, Strömung hilft nicht mit.' },
+		talsperre: { n: 'Talsperre',         s: 'tief, oft klar',   maxD: 12, cur: 0,    note: 'Tiefe, oft klare Talsperre: Fische stehen an Kanten, Steilufern und im Freiwasser über Baumresten.' },
+		fluss:     { n: 'Fluss',             s: 'Strömung, Buhnen', maxD: 3,  cur: 1,    note: 'Strömung drückt auf den Köder: Gewicht erhöhen, Kehrwasser und Strömungskanten gezielt befischen.' },
+		kanal:     { n: 'Kanal / Hafen',     s: 'Spundwand, Brücken', maxD: 4, cur: 0.25, note: 'Kanäle sind gleichmäßig tief: Fische stehen an Spundwänden, Brückenpfeilern, Schiffsliegeplätzen und Einmündungen.' },
+		bach:      { n: 'Bach / kl. Fluss',  s: 'Gumpen, Kehrwasser', maxD: 1, cur: 1,   note: 'Flaches, schnelles Wasser: kleine, leichte Köder, Anwurf quer oder stromauf, Standplätze hinter Steinen.' },
+		teich:     { n: 'Teich / Weiher',    s: 'flach, verkrautet', maxD: 2,  cur: 0,   note: 'Flach und warm: Fische reagieren stark auf Licht und Temperatur, Oberflächenköder und hängerarme Montagen sind oft gefragt.' }
 	};
 	var STRUCT = {
 		kraut: { n: 'Kraut / Seerosen',    s: 'Hänger-Gefahr hoch',  weed: 1,   note: 'Im Kraut brauchst du hängerarme Montagen (Offset-Haken, Spinnerbait, Frosch). Offene Drillinge verfangen sich sofort.' },
@@ -87,6 +90,8 @@
 		nacht:      { n: 'Nacht',           l: 2 }
 	};
 	var ZONES = ['surface', 'shallow', 'mid', 'deep', 'bottom'];
+	var ZP = { surface: 'an der Oberfläche', shallow: 'im Flachwasser', mid: 'im Mittelwasser', deep: 'im tiefen Freiwasser', bottom: 'knapp über Grund' };
+	var MAXD = { shad: 25, offset: 6, dropshot: 20, twister: 10, wobS: 2.5, wobD: 8, jerk: 4, spinner: 5, blinker: 12, spbait: 4, chatter: 4, popper: 0.5, frog: 0.5, pilker: 30 };
 	var ZN = { surface: 'Oberfläche', shallow: 'Flachwasser (0,5–2 m)', mid: 'Mittelwasser (2–5 m)', deep: 'Tiefes Freiwasser (ab 5 m)', bottom: 'Grundnah' };
 
 	/* Köder: z = Zonen, sp = Tempo-Bereich (0 = kriechend, 1 = schnell), vib = Vibration 0–3,
@@ -148,10 +153,10 @@
 			how: function () { return ['Köder bis zum Grund ablassen, einen Meter anheben und frei fallen lassen.', 'Rute dabei so führen, dass die Schnur beim Fallen nie komplett schlaff wird.', 'Mit Echolot auf den Fisch ablassen und über ihm pilken.']; } }
 	};
 	var ACT_FOR = {
-		shad:    function (s) { return s < 0.2 ? 'schlepp' : s < 0.55 ? 'faulen' : 'gleich'; },
+		shad:    function (s, z) { return s < 0.2 ? 'schlepp' : (s < 0.55 || z === 'bottom') ? 'faulen' : 'gleich'; },
 		offset:  function (s) { return s < 0.22 ? 'schlepp' : s < 0.5 ? 'faulen' : 'stopgo'; },
 		dropshot:function () { return 'dropshot'; },
-		twister: function (s) { return s < 0.28 ? 'schlepp' : s < 0.5 ? 'faulen' : 'gleich'; },
+		twister: function (s, z) { return s < 0.28 ? 'schlepp' : (s < 0.5 || z === 'bottom') ? 'faulen' : 'gleich'; },
 		wobS:    function (s) { return s < 0.4 ? 'stopgo' : 'gleich'; },
 		wobD:    function (s) { return s < 0.45 ? 'stopgo' : 'gleich'; },
 		jerk:    function () { return 'jerken'; },
@@ -167,18 +172,18 @@
 	function pauseSec(s) { return Math.round(lerp(5.5, 0.5, s) * 2) / 2; }
 
 	var PRESETS = [
-		{ t: 'Zander im Winterkanal', s: 'trüb, Dämmerung, 4 °C', v: { sp: 'zander', gw: 'kanal', st: 'kante', kl: 2, ss: 'winter', temp: 4, wx: 'wolkig', wind: false, tz: 'abend' } },
-		{ t: 'Hecht im Sommerkraut', s: 'klar, Abend, 21 °C', v: { sp: 'hecht', gw: 'teich', st: 'kraut', kl: 1, ss: 'sommer', temp: 22, wx: 'sonnig', wind: false, tz: 'abend' } },
-		{ t: 'Barsch am Mittag im klaren See', s: 'sonnig, Kante, Frühherbst', v: { sp: 'barsch', gw: 'see', st: 'kante', kl: 0, ss: 'herbst1', temp: 16, wx: 'sonnig', wind: false, tz: 'mittag' } },
-		{ t: 'Wels bei Nacht im Fluss', s: 'Holz, trüb, Sommer', v: { sp: 'wels', gw: 'fluss', st: 'holz', kl: 2, ss: 'sommer', temp: 22, wx: 'wolkig', wind: false, tz: 'nacht' } },
-		{ t: 'Rapfen im Abendstrom', s: 'Fluss, Wind, Sommer', v: { sp: 'rapfen', gw: 'fluss', st: 'frei', kl: 1, ss: 'sommer', temp: 20, wx: 'wolkig', wind: true, tz: 'abend' } },
-		{ t: 'Forelle im Frühlingsbach', s: 'klar, Vormittag, 9 °C', v: { sp: 'forelle', gw: 'bach', st: 'holz', kl: 0, ss: 'fruehl', temp: 9, wx: 'wolkig', wind: false, tz: 'vormittag' } }
+		{ t: 'Zander im Winterkanal', s: 'trüb, Dämmerung, 4 °C', v: { sp: 'zander', gw: 'kanal', st: 'kante', kl: 2, ss: 'winter', temp: 4, wx: 'wolkig', wind: false, tz: 'abend', depth: 4 } },
+		{ t: 'Hecht im Sommerkraut', s: 'klar, Abend, 21 °C', v: { sp: 'hecht', gw: 'teich', st: 'kraut', kl: 1, ss: 'sommer', temp: 22, wx: 'sonnig', wind: false, tz: 'abend', depth: 1.5 } },
+		{ t: 'Barsch am Mittag im klaren See', s: 'sonnig, Kante, Frühherbst', v: { sp: 'barsch', gw: 'see', st: 'kante', kl: 0, ss: 'herbst1', temp: 16, wx: 'sonnig', wind: false, tz: 'mittag', depth: 7 } },
+		{ t: 'Wels bei Nacht im Fluss', s: 'Holz, trüb, Sommer', v: { sp: 'wels', gw: 'fluss', st: 'holz', kl: 2, ss: 'sommer', temp: 22, wx: 'wolkig', wind: false, tz: 'nacht', depth: 4 } },
+		{ t: 'Rapfen im Abendstrom', s: 'Fluss, Wind, Sommer', v: { sp: 'rapfen', gw: 'fluss', st: 'frei', kl: 1, ss: 'sommer', temp: 20, wx: 'wolkig', wind: true, tz: 'abend', depth: 2.5 } },
+		{ t: 'Forelle im Frühlingsbach', s: 'klar, Vormittag, 9 °C', v: { sp: 'forelle', gw: 'bach', st: 'holz', kl: 0, ss: 'fruehl', temp: 9, wx: 'wolkig', wind: false, tz: 'vormittag', depth: 1 } }
 	];
 
 	/* ------------------------------------------------------------------ *
 	 * Modell
 	 * ------------------------------------------------------------------ */
-	var S = { sp: 'hecht', gw: 'see', st: 'kante', kl: 1, ss: 'herbst1', temp: 16, wx: 'wolkig', wind: false, tz: 'abend' };
+	var S = { sp: 'hecht', gw: 'see', st: 'kante', kl: 1, ss: 'herbst1', temp: 16, wx: 'wolkig', wind: false, tz: 'abend', depth: 6 };
 
 	function interp(points, x) {
 		var i;
@@ -189,13 +194,12 @@
 		return points[points.length - 1][1];
 	}
 
-	function zoneDepth(z, w) {
-		var m = w.maxD;
-		return { surface: 0.15, shallow: Math.min(1.5, m * 0.5), mid: Math.min(3.5, m * 0.6), deep: Math.min(8, m * 0.8), bottom: m * 0.7 }[z];
+	function zoneDepth(z, d) {
+		return { surface: 0.15, shallow: Math.min(1.5, d * 0.5), mid: Math.min(3.5, d * 0.6), deep: clamp(d * 0.6, 4, 12), bottom: Math.max(0.3, d - 0.2) }[z];
 	}
 
 	function derive(s) {
-		var sp = SP[s.sp], w = WATER[s.gw], se = SEAS[s.ss], cl = CLAR[s.kl], T = s.temp;
+		var sp = SP[s.sp], w = WATER[s.gw], se = SEAS[s.ss], cl = CLAR[s.kl], T = s.temp, D = s.depth || w.maxD;
 		var night = s.tz === 'nacht', dusk = s.tz === 'morgen' || s.tz === 'abend';
 		var L0 = clamp(TIME[s.tz].l * WX[s.wx].f * se.sun, 1, 100);
 		var bright = L0 / 100, low = 1 - bright;
@@ -217,18 +221,18 @@
 			+ (s.st === 'kraut' && T >= 15 ? 1.5 : 0) - (s.sp === 'zander' || s.sp === 'forelle' ? 1.5 : 0);
 		z.shallow = 1 + 2.4 * low + (T >= 7 && T <= 20 ? 1 : 0) + (spring ? 1.2 : 0) + (s.kl >= 2 ? 0.6 : 0)
 			- (T > 22 && bright > 0.5 ? 2 : 0) - (T < 5 ? 1.5 : 0) + (s.sp === 'zander' && !(night || dusk) ? -2.5 : 0) + (s.st === 'kraut' ? 1 : 0);
-		z.mid = 1.8;
-		z.deep = w.maxD >= 5 ? (-0.5 + 2.4 * bright * (s.kl <= 1 ? 1 : 0.4) + (T < 6 ? 1.8 : 0) + (T > 22 ? 2 : 0) + (s.sp === 'zander' ? 1 : 0) - (s.sp === 'rapfen' ? 2 : 0)) : -99;
+		z.mid = D >= 2.5 ? 1.8 : -99;
+		z.deep = D >= 6 ? (-0.5 + 2.4 * bright * (s.kl <= 1 ? 1 : 0.4) + (T < 6 ? 1.8 : 0) + (T > 22 ? 2 : 0) + (s.sp === 'zander' ? 1 : 0) - (s.sp === 'rapfen' ? 2 : 0)) : -99;
 		z.bottom = (T < 10 ? 1.8 : 0.5) + (s.sp === 'zander' ? 2 : 0) + (s.sp === 'wels' ? 1.4 : 0) + (s.sp === 'barsch' ? 0.4 : 0)
 			+ bright * 0.8 + (s.st === 'kante' ? 1 : 0) - (s.sp === 'rapfen' ? 4 : 0);
 		var zone = 'mid', best = -999;
 		ZONES.forEach(function (k) { if (z[k] > best) { best = z[k]; zone = k; } });
-		var zd = zoneDepth(zone, w);
+		var zd = zoneDepth(zone, D);
 
 		var Lw = L0 * Math.exp(-cl.k * zd);
 
 		var c = {
-			sp: sp, w: w, se: se, cl: cl, T: T, night: night, dusk: dusk, L0: L0, bright: bright, low: low,
+			sp: sp, w: w, se: se, D: D, cl: cl, T: T, night: night, dusk: dusk, L0: L0, bright: bright, low: low,
 			speed: speed, zone: zone, zoneDepth: zd, Lw: Lw,
 			vibNeed: clamp(1 + s.kl * 0.55 + low * 0.8 + (s.sp === 'wels' ? 0.8 : 0) + (night ? 0.4 : 0), 0, 3),
 			flashNeed: clamp(0.4 + bright * 1.6 + (s.kl >= 2 && bright > 0.4 ? 0.6 : 0) - (night ? 0.8 : 0) - (T < 6 ? 0.3 : 0), 0, 3),
@@ -246,7 +250,8 @@
 		var fFit = 1 - Math.abs(c.flashNeed - l.fl) / 3;
 		var wFit = l.weed >= c.weedNeed ? 1 : Math.max(0, 1 - (c.weedNeed - l.weed) * 1.3);
 		var cFit = c.currNeed > 0.5 ? 0.5 + 0.5 * l.cur : 1;
-		var base = (0.2 * sFit + 0.26 * zFit + 0.12 * vFit + 0.08 * fFit + 0.14 * wFit + 0.05 * cFit) / 0.85;
+		var md = MAXD[l.id] || 99, dFit = c.zoneDepth <= md ? 1 : Math.max(0.35, 1 - (c.zoneDepth - md) / md);
+		var base = dFit * (0.2 * sFit + 0.26 * zFit + 0.12 * vFit + 0.08 * fFit + 0.14 * wFit + 0.05 * cFit) / 0.85;
 		return Math.round(base * (0.25 + 0.75 * aff) * 100);
 	}
 
@@ -257,7 +262,8 @@
 		needNat = clamp(needNat, 0, 1) * (0.35 + 0.65 * Math.min(1, Lw / 40));
 		var needCon = 1 - needNat;
 		var needDark = Lw < 30 ? clamp((30 - Lw) / 30 * 0.9, 0, 0.9) * (cl <= 1 ? 1 : 0.6) : 0.05;
-		var needGlow = Lw < 8 ? 1 : Lw < 20 ? 0.5 : 0;
+		var needGlow = Lw < 4 ? 1 : Lw < 12 ? 0.35 : 0;
+		if (c.zone === 'surface') { needGlow = 0; if (Lw < 30) { needDark = 0.9; } }
 		var needDeep = clamp(c.zoneDepth / 8, 0, 1) * (c.zone === 'bottom' || c.zone === 'deep' ? 1 : 0.6);
 		var d = 0.3 * Math.abs(col.nat - needNat) + 0.18 * Math.abs(col.con - needCon) + 0.2 * Math.abs(col.dark - needDark)
 			+ 0.17 * Math.abs(col.glow - needGlow) + 0.15 * Math.abs(col.deep - needDeep);
@@ -341,7 +347,7 @@
 
 		var top = LURE[ranked[0].id], col = COL[cols[0].id];
 		var size = lureSize(top, c, s), weight = lureWeight(top, c, s, size), shape = shapeFor(top, c, s);
-		var akey = ACT_FOR[top.id](c.speed);
+		var akey = ACT_FOR[top.id](c.speed, c.zone);
 		return { s: s, c: c, ranked: ranked, cols: cols, top: top, col: col, size: size, weight: weight, shape: shape, akey: akey, act: ACT[akey], anim: ACT[akey].a(c.speed) };
 	}
 
@@ -421,18 +427,20 @@
 	}
 	function controlsHTML() {
 		var h = '';
-		h += '<fieldset class="kl-grp"><legend>Beispiele zum Einsteigen</legend><div class="kl-presets">' + PRESETS.map(function (p, i) {
+		h += '<fieldset class="kl-grp"><legend>Schnellstart: Beispiel laden</legend><div class="kl-presets">' + PRESETS.map(function (p, i) {
 			return '<button type="button" class="kl-preset" data-preset="' + i + '">' + p.t + '<small>' + p.s + '</small></button>';
 		}).join('') + '</div></fieldset>';
 		h += group('sp', 'Zielfisch', SP_LIST.map(function (a) { return chip('sp', a[0], a[1], '', S.sp === a[0]); }));
 		h += group('gw', 'Gewässer', Object.keys(WATER).map(function (k) { return chip('gw', k, WATER[k].n, WATER[k].s, S.gw === k); }));
 		h += group('st', 'Struktur am Platz', Object.keys(STRUCT).map(function (k) { return chip('st', k, STRUCT[k].n, STRUCT[k].s, S.st === k); }));
+		h += '<div class="kl-temp"><label for="kl-tiefe" class="kl-hint kl-lab-label">Wassertiefe am Angelplatz</label><div class="kl-temp-row"><input type="range" id="kl-tiefe" min="1" max="20" step="0.5" value="' + S.depth + '"><output id="kl-tiefeout" for="kl-tiefe">' + de(S.depth, S.depth % 1 ? 1 : 0) + ' m</output></div><span class="kl-hint">Wie tief ist es dort, wo dein Köder landet? Wird beim Gewässerwechsel vorbelegt.</span></div>';
 		h += group('kl', 'Wasserklarheit', CLAR.map(function (c, i) { return chip('kl', i, c.n, c.s, S.kl === i); }));
 		h += group('ss', 'Jahreszeit', Object.keys(SEAS).map(function (k) { return chip('ss', k, SEAS[k].n, SEAS[k].s, S.ss === k); }));
-		h += '<div class="kl-temp"><label for="kl-temp" class="kl-hint" style="font-weight:600;letter-spacing:.1em;text-transform:uppercase">Wassertemperatur</label><div class="kl-temp-row"><input type="range" id="kl-temp" min="2" max="28" step="1" value="' + S.temp + '"><output id="kl-tempout" for="kl-temp">' + S.temp + ' °C</output></div><span class="kl-hint">Folgt der Jahreszeit, kannst du aber verstellen (Flachwasser, kalte Quellen, Hitzewelle).</span></div>';
+		h += '<div class="kl-temp"><label for="kl-temp" class="kl-hint kl-lab-label">Wassertemperatur</label><div class="kl-temp-row"><input type="range" id="kl-temp" min="2" max="28" step="1" value="' + S.temp + '"><output id="kl-tempout" for="kl-temp">' + S.temp + ' °C</output></div><span class="kl-hint">Folgt der Jahreszeit, kannst du aber verstellen (Flachwasser, kalte Quellen, Hitzewelle).</span></div>';
 		h += group('wx', 'Wetter', Object.keys(WX).map(function (k) { return chip('wx', k, WX[k].n, '', S.wx === k); }));
 		h += '<label class="kl-chip kl-wind"><input type="checkbox" id="kl-wind"' + (S.wind ? ' checked' : '') + '><span><b>Wind und Welle</b><small>kräuselt die Oberfläche</small></span></label>';
 		h += group('tz', 'Tageszeit', Object.keys(TIME).map(function (k) { return chip('tz', k, TIME[k].n, '', S.tz === k); }));
+		h += '<button type="button" class="kl-btn kl-goto" id="kl-goto">Empfehlung ansehen ↓</button>';
 		return h;
 	}
 
@@ -440,13 +448,14 @@
 		root.innerHTML =
 			'<header class="kl-head"><div><h2 class="kl-title">Köder-Labor</h2><p class="kl-sub">Raubfisch-Köder verstehen: Farbe, Gewicht, Form, Größe und Führung passend zu Gewässer, Wasserklarheit, Jahreszeit, Wetter und Licht.</p></div>' +
 			'<div class="kl-tabs" role="tablist" aria-label="Bereiche">' +
-			'<button type="button" class="kl-tab" role="tab" id="kl-t-lab" aria-controls="kl-p-lab" data-tab="lab">Labor</button>' +
+			'<button type="button" class="kl-tab" role="tab" id="kl-t-lab" aria-controls="kl-p-lab" data-tab="lab">Köder-Finder</button>' +
 			'<button type="button" class="kl-tab" role="tab" id="kl-t-quiz" aria-controls="kl-p-quiz" data-tab="quiz">Prüfung</button>' +
 			'<button type="button" class="kl-tab" role="tab" id="kl-t-wissen" aria-controls="kl-p-wissen" data-tab="wissen">Grundlagen</button></div></header>' +
 
 			'<section id="kl-p-lab" role="tabpanel" aria-labelledby="kl-t-lab"><div class="kl-lab">' +
-			'<details class="kl-ctl" id="kl-ctl" open><summary>Bedingungen<span class="kl-tog" aria-hidden="true">ändern ▾</span></summary><div class="kl-ctl-body" id="kl-ctlbody"></div></details>' +
+			'<details class="kl-ctl" id="kl-ctl" open><summary>Deine Bedingungen<span class="kl-tog" aria-hidden="true">▾</span></summary><div class="kl-ctl-body" id="kl-ctlbody"></div></details>' +
 			'<div class="kl-res" aria-live="polite">' +
+			'<p class="kl-ideal" id="kl-ideal"></p>' +
 			'<dl class="kl-sum" id="kl-sum"></dl>' +
 			'<div id="kl-warn" class="kl-notes"></div>' +
 			'<article class="kl-sheet"><div class="kl-sheet-top"><span>Köder-Datenblatt</span><span id="kl-sheetfor"></span></div><div class="kl-sheet-art" id="kl-art"></div><dl class="kl-specs" id="kl-specs"></dl></article>' +
@@ -479,7 +488,7 @@
 		// Kennzahlen
 		var lightLabel = c.Lw > 60 ? 'hell' : c.Lw > 25 ? 'gedämpft' : c.Lw > 8 ? 'dunkel' : 'fast schwarz';
 		$('#kl-sum').innerHTML =
-			'<div class="kl-stat"><dt>Zielzone</dt><dd>' + ZN[c.zone] + '</dd></div>' +
+			'<div class="kl-stat"><dt>Köder-Lauftiefe</dt><dd>' + ZN[c.zone].split(' (')[0] + '<small class="kl-hint" style="display:block;font-weight:400">ca. ' + de(c.zoneDepth, 1) + ' m bei ' + de(c.D, c.D % 1 ? 1 : 0) + ' m Wassertiefe</small></dd></div>' +
 			'<div class="kl-stat"><dt>Licht in der Zone</dt><dd class="kl-num">' + Math.round(c.Lw) + ' %<span class="kl-meter"><i style="width:' + clamp(c.Lw, 2, 100) + '%"></i></span><small class="kl-hint" style="display:block;font:400 .78rem/1.3 var(--kl-font)">' + lightLabel + ' · Oberfläche ' + Math.round(c.L0) + ' %</small></dd></div>' +
 			'<div class="kl-stat"><dt>Wassertemperatur</dt><dd class="kl-num">' + c.T + ' °C</dd></div>' +
 			'<div class="kl-stat"><dt>Tempo-Bedarf</dt><dd>' + tempoWord(c.speed) + '<span class="kl-meter"><i style="width:' + Math.round(c.speed * 100) + '%"></i></span></dd></div>';
@@ -495,7 +504,9 @@
 
 		// Datenblatt
 		var cols = col.c.slice(); cols.id = col.id;
-		$('#kl-art').innerHTML = lureSVG(l, cols, R.shape);
+		$('#kl-art').innerHTML = IMG[l.id]
+			? '<div class="kl-photo-wrap"><img class="kl-photo" src="' + escAttr(IMG[l.id]) + '" alt="' + escAttr(l.n) + '" loading="lazy" decoding="async"><figure class="kl-colprev">' + lureSVG(l, cols, R.shape) + '<figcaption>empfohlene Farbe</figcaption></figure></div>'
+			: lureSVG(l, cols, R.shape);
 		$('#kl-sheetfor').textContent = SP[s.sp].n + ' · ' + WATER[s.gw].n + ' · ' + c.T + ' °C';
 
 		var sizeTxt = (R.size[0] === R.size[1] ? de(R.size[0], R.size[0] % 1 ? 1 : 0) : de(R.size[0], R.size[0] % 1 ? 1 : 0) + '–' + de(R.size[1], R.size[1] % 1 ? 1 : 0)) + ' cm';
@@ -533,13 +544,14 @@
 			html += specRow(k, labels[k], rows[k][0], rows[k][1], rows[k][2], changed);
 		});
 		$('#kl-specs').innerHTML = html;
+		$('#kl-ideal').innerHTML = '<b>Ideal für diese Bedingungen:</b> ' + l.n + ' in <em>' + col.n + '</em>, ' + sizeTxt + ', ' + wTxt + '. ' + R.act.n + ' (' + tempoWord(c.speed) + ') ' + ZP[c.zone] + ', ca. ' + de(c.zoneDepth, 1) + ' m.';
 
 		// Alternativen
 		var alts = fromRank.slice(1, 4).map(function (r) {
 			var a = LURE[r.id], sz = lureSize(a, c, s), wt = lureWeight(a, c, s, sz), sh = shapeFor(a, c, s);
-			return '<div class="kl-alt">' + lureSVG(a, col.c.slice().concat([]).map(function (x) { return x; }), sh, false) +
+			return '<div class="kl-alt">' + (IMG[r.id] ? '<img class="kl-photo" src="' + escAttr(IMG[r.id]) + '" alt="' + escAttr(a.n) + '" loading="lazy" decoding="async">' : lureSVG(a, col.c.slice(), sh, false)) +
 				'<h3>' + a.n + '</h3><span class="kl-score">Passung ' + r.score + ' / 100</span>' +
-				'<p>' + de(sz[0], sz[0] % 1 ? 1 : 0) + '–' + de(sz[1], sz[1] % 1 ? 1 : 0) + ' cm · ' + wt[0] + '–' + wt[1] + ' g · ' + ACT[ACT_FOR[r.id](c.speed)].n + '</p></div>';
+				'<p>' + de(sz[0], sz[0] % 1 ? 1 : 0) + '–' + de(sz[1], sz[1] % 1 ? 1 : 0) + ' cm · ' + wt[0] + '–' + wt[1] + ' g · ' + ACT[ACT_FOR[r.id](c.speed, c.zone)].n + '</p></div>';
 		}).join('');
 		$('#kl-alts').innerHTML = alts;
 		var altSVGs = $$('.kl-alt svg');
@@ -654,9 +666,9 @@
 	function drawFrame(t) {
 		if (!R || !CW) { return; }
 		var c = R.c, w = c.w, a = R.anim, col = R.col;
-		var sY = 38, D = Math.max(3, w.maxD), ppm = (CH - sY - 14) / D;
+		var sY = 38, D = Math.max(3, c.D * 1.15), ppm = (CH - sY - 14) / D;
 		var wc = WATERCOL[S.kl], b = 0.14 + 0.86 * c.bright;
-		var full = w.maxD * 0.85;
+		var full = c.D;
 		var depthX = function (dm) { return sY + dm * ppm; };
 		var bd = function (x) {
 			var d;
@@ -798,7 +810,8 @@
 		var ss = pick(Object.keys(SEAS)), tmp = clamp(SEAS[ss].t + Math.round((Math.random() - 0.5) * 4), 2, 26);
 		if (sp === 'wels' && tmp < 14) { ss = pick(['sommer', 'herbst1']); tmp = SEAS[ss].t; }
 		if (sp === 'forelle' && tmp > 16) { ss = pick(['fruehl', 'herbst2', 'vorfr']); tmp = SEAS[ss].t; }
-		return { sp: sp, gw: pick(gws), st: pick(Object.keys(STRUCT)), kl: pick([0, 1, 2, 3]), ss: ss, temp: tmp, wx: pick(Object.keys(WX)), wind: Math.random() < 0.3, tz: pick(Object.keys(TIME)) };
+		var gw = pick(gws), dr = DRANGE[gw], dep = Math.round(lerp(dr[0], dr[1], Math.random()) * 2) / 2;
+		return { depth: dep, sp: sp, gw: gw, st: pick(Object.keys(STRUCT)), kl: pick([0, 1, 2, 3]), ss: ss, temp: tmp, wx: pick(Object.keys(WX)), wind: Math.random() < 0.3, tz: pick(Object.keys(TIME)) };
 	}
 	function speedBucket(sp) { return clamp(Math.floor(sp * 4), 0, 3); }
 	var BUCKETS = [['Sehr langsam', 'kriechend, lange Pausen, Grundkontakt'], ['Langsam', 'ruhig, längere Pausen'], ['Mittel', 'gleichmäßig, kurze Stopps'], ['Zügig bis schnell', 'durchgehend, wenig Pausen']];
@@ -823,7 +836,7 @@
 		var rank = rankName(stats.pts / Math.max(1, stats.max));
 		var h = '<div class="kl-quiz"><div>' +
 			'<div class="kl-card"><h3 class="kl-h" style="margin:0">Aufgabe</h3><dl class="kl-scn">' +
-			[['Zielfisch', SP[s.sp].n], ['Gewässer', WATER[s.gw].n], ['Struktur', STRUCT[s.st].n], ['Wasser', CLAR[s.kl].n + ', ' + s.temp + ' °C'], ['Jahreszeit', SEAS[s.ss].n], ['Wetter', WX[s.wx].n + (s.wind ? ', Wind' : '')], ['Tageszeit', TIME[s.tz].n]]
+			[['Zielfisch', SP[s.sp].n], ['Gewässer', WATER[s.gw].n], ['Struktur', STRUCT[s.st].n], ['Tiefe am Platz', de(s.depth, s.depth % 1 ? 1 : 0) + ' m'], ['Wasser', CLAR[s.kl].n + ', ' + s.temp + ' °C'], ['Jahreszeit', SEAS[s.ss].n], ['Wetter', WX[s.wx].n + (s.wind ? ', Wind' : '')], ['Tageszeit', TIME[s.tz].n]]
 				.map(function (x) { return '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>'; }).join('') +
 			'</dl></div>' +
 			'<div class="kl-card"><div class="kl-rank">' + rank + '</div><p class="kl-hint">' + stats.rounds + ' Aufgaben · ' + stats.pts + ' von ' + stats.max + ' Punkten</p></div></div>' +
@@ -886,7 +899,7 @@
 			'<div class="kl-ct-row" id="kl-ct"></div></section>';
 		h += '<section><h3 class="kl-h">Köder-Lexikon</h3><div class="kl-lexi">' + Object.keys(LURE).map(function (k) {
 			var l = LURE[k]; l.id = k;
-			return '<div class="kl-fact">' + lureSVG(l, ['#56707f', '#c8d2d6', '#f3f4f2'], 'mid', true) + '<h3>' + l.n + '</h3><p>' + l.d + '</p><div class="kl-tags"><span>' + l.z.map(function (z) { return ZN[z].split(' (')[0]; }).join(' · ') + '</span><span>Tempo ' + tempoWord(l.sp[0]) + ' bis ' + tempoWord(l.sp[1]) + '</span><span>' + (l.weed >= 0.8 ? 'hängerarm' : l.weed >= 0.5 ? 'bedingt hängerarm' : 'Hängergefahr') + '</span></div></div>';
+			return '<div class="kl-fact">' + (IMG[k] ? '<img class="kl-photo" src="' + escAttr(IMG[k]) + '" alt="' + escAttr(l.n) + '" loading="lazy" decoding="async">' : lureSVG(l, ['#56707f', '#c8d2d6', '#f3f4f2'], 'mid', true)) + '<h3>' + l.n + '</h3><p>' + l.d + '</p><div class="kl-tags"><span>' + l.z.map(function (z) { return ZN[z].split(' (')[0]; }).join(' · ') + '</span><span>Tempo ' + tempoWord(l.sp[0]) + ' bis ' + tempoWord(l.sp[1]) + '</span><span>' + (l.weed >= 0.8 ? 'hängerarm' : l.weed >= 0.5 ? 'bedingt hängerarm' : 'Hängergefahr') + '</span></div></div>';
 		}).join('') + '</div></section></div>';
 		return h;
 	}
@@ -922,6 +935,8 @@
 			var el = root.querySelector('input[name="' + n + '"][value="' + S[n] + '"]'); if (el) { el.checked = true; }
 		});
 		$('#kl-temp').value = S.temp; $('#kl-tempout').textContent = S.temp + ' °C'; $('#kl-wind').checked = S.wind;
+		if (!S.depth) { S.depth = WATER[S.gw].maxD; }
+		$('#kl-tiefe').value = S.depth; $('#kl-tiefeout').textContent = de(S.depth, S.depth % 1 ? 1 : 0) + ' m';
 	}
 	function setTheme() {
 		// Artefakt-Host: dem Seitenthema folgen (im WordPress-Betrieb bleibt der Shortcode-Wert).
@@ -936,30 +951,33 @@
 
 		var ctl = $('#kl-ctl'), mq = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
 		var fitCtl = function () { if (mq && mq.matches) { ctl.open = true; } };
-		if (mq) { if (mq.addEventListener) { mq.addEventListener('change', fitCtl); } else if (mq.addListener) { mq.addListener(fitCtl); } if (!mq.matches) { ctl.open = false; } }
+		if (mq) { if (mq.addEventListener) { mq.addEventListener('change', fitCtl); } else if (mq.addListener) { mq.addListener(fitCtl); } }
 
 		root.addEventListener('change', function (e) {
 			var t = e.target, n = t.name;
 			if (!t.closest('#kl-ctlbody')) { return; }
 			if (t.id === 'kl-wind') { S.wind = t.checked; }
 			else if (n === 'kl') { S.kl = +t.value; }
+			else if (n === 'gw') { S.gw = t.value; S.depth = WATER[t.value].maxD; $('#kl-tiefe').value = S.depth; $('#kl-tiefeout').textContent = de(S.depth, S.depth % 1 ? 1 : 0) + ' m'; }
 			else if (n === 'ss') { S.ss = t.value; S.temp = SEAS[t.value].t; $('#kl-temp').value = S.temp; $('#kl-tempout').textContent = S.temp + ' °C'; }
 			else if (n && S.hasOwnProperty(n)) { S[n] = t.value; }
 			paint();
 		});
 		root.addEventListener('input', function (e) {
 			if (e.target.id === 'kl-temp') { S.temp = +e.target.value; $('#kl-tempout').textContent = S.temp + ' °C'; paint(); }
+			if (e.target.id === 'kl-tiefe') { S.depth = +e.target.value; $('#kl-tiefeout').textContent = de(S.depth, S.depth % 1 ? 1 : 0) + ' m'; paint(); }
 		});
 		root.addEventListener('click', function (e) {
 			var t = e.target.closest ? e.target.closest('button') : null;
 			if (!t) { return; }
 			if (t.hasAttribute('data-tab')) { showTab(t.getAttribute('data-tab')); }
-			else if (t.hasAttribute('data-preset')) { S = JSON.parse(JSON.stringify(PRESETS[+t.getAttribute('data-preset')].v)); syncControls(); paint(); if (!mq || !mq.matches) { ctl.open = false; } var res = $('.kl-res'); if (res && res.scrollIntoView) { res.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' }); } }
+			else if (t.hasAttribute('data-preset')) { S = JSON.parse(JSON.stringify(PRESETS[+t.getAttribute('data-preset')].v)); syncControls(); paint(); var res = $('#kl-ideal'); if (res && res.scrollIntoView) { res.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' }); } }
 			else if (t.id === 'kl-play') {
 				playing = !playing; t.textContent = playing ? 'Pause' : 'Abspielen'; t.setAttribute('aria-pressed', playing ? 'true' : 'false');
 				if (playing) { t0 = performance.now() - tPaused * 1000; } else { tPaused = ((performance.now() - t0) / 1000) % 20; }
 				kick();
 			}
+			else if (t.id === 'kl-goto') { var rs = $('#kl-ideal'); if (rs && rs.scrollIntoView) { rs.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' }); } }
 			else if (t.id === 'kl-qnew' || t.id === 'kl-qnext') { newQuiz(); }
 			else if (t.id === 'kl-qlab') { S = JSON.parse(JSON.stringify(Q.s)); syncControls(); paint(); showTab('lab'); }
 		});
